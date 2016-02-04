@@ -106,7 +106,7 @@ client = Twitch::Chat::Client.new(channel: 'dragnflier', nickname: 'dragnflier',
                 send_message "MaiWaifu"
             when /\A!\S*touch\Z/i then
                 be_touched(user)
-            when /\A!\S*anal\Z/i,  /\A!.*cock/, /\A!.*penis/, /\A!.*pen15/, /\A!.*vagina/, /\A!.*pussy/ then
+            when /\A!\S*(anal|cock|penis|pen15|vagina|pussy)\Z/i then
                 be_disgusted(user)
             when /LillyBag/ then
                 send_message "CatBag + MaiWaifu = LillyBag"
@@ -132,7 +132,7 @@ client = Twitch::Chat::Client.new(channel: 'dragnflier', nickname: 'dragnflier',
                 send_message "I can respond to my name and any of these commands, plus many more: #{JSON.parse(File.read('responses.json'))['commands'].sample}"
             when /\A!time/i then
                 send_message "The current time in Melbourne, Australia is #{Time.now.strftime('%I:%M %p')}"
-            when /\A!!\Z/, /\S.*!!\Z/ then
+            when /(\A!!|\S.*!!)\Z/ then
                 send_message "#{message}!"
             when /\A!.*pat/i then
                 send message "*scrunches face at #{user}*"
@@ -144,11 +144,12 @@ client = Twitch::Chat::Client.new(channel: 'dragnflier', nickname: 'dragnflier',
                     send_message "I don't think Astrious appreciates that, #{user}"
                 else
                     send_message "*blushes*"
+                end
             when /\A!.*slots/i then
                 play_slots(user, message)
             when /\A!chance/i then
                 play_chance(user)
-            when /\A!.*punch/, /\A!.*attack/ then
+            when /\A!.*(punch|attack)/ then
                 send_message "We don't accept violence here"
                 send_message ".timeout #{user} 1"
             else
