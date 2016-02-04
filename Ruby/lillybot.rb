@@ -12,11 +12,7 @@ def say_hello(user, message)
         end
     end
 end
-#
-# def say_commands
-#     send_message "I can respond to my name and any of these commands, plus many more: #{JSON.parse(File.read("responses.json"))["commands"].join(", ")}"
-# end
-#
+
 def be_touched(user)
     if user != "astrious" && user != "dragnflier"
         send_message ".timeout #{user} 1"
@@ -40,50 +36,58 @@ end
 #     end
 # end
 
-# def send_quote
-#     send_message JSON.parse(File.read("responses.json"))["quotes"].sample
-# end
+def play_slots(user, message)
+    file = File.read("responses.json")
+    responses = JSON.parse(file)
+    faces = nil
+    if message =~ /cat/i
+        faces = responses["catslots"]
+    else
+        if message =~ /dog/i
+            faces = responses["dogslots"]
+        else
+            faces = responses["slots"]
+        end
+    end
 
-# def play_slots(user, message)
-#     file = File.read("responses.json")
-#     faces = nil
-#     if message =~ /cat/i
-#         faces = JSON.parse(file)["catslots"]
-#     else
-#         if message =~ /dog/i
-#             faces = JSON.parse(file)["dogslots"]
-#         else
-#             faces = JSON.parse(file)["slots"]
-#     end
-#
-#     face1 = faces.sample
-#     face2 = faces.sample
-#     face3 = faces.sample
-#
-#     send_message "You rolled: #{face1}, #{face2}, #{face3}"
-#
-#     if face1 == face2 == face3
-#         if face1 == 'Kappa'
-#             send_message "Oh dear. Bad luck, #{user}!"
-#             send_message ".timeout #{user} 60"
-#         else
-#             if face1 =='AssFace'
-#                 send_message "What a cutie! <3"
-#             else
-#                 if face1 == 'FrankerZ' || face1 == 'LilZ'
-#                     send_message "I love dogs!"
-#             end
-#         end
-#         send_message "Congratulations!"
-#     else
-#         if (face1 == face2) || (face1 == face3) || (face2 == face3)
-#             send_message "So close!"
-#         else
-#             send_message "Better luck next time!"
-#         end
-#     end
-# end
+    face1 = faces.sample
+    face2 = faces.sample
+    face3 = faces.sample
 
+    if face1 == face2 && face2 == face3
+        if face1 == 'Kappa'
+            send_message "Oh dear. Bad luck, #{user}!"
+            send_message ".timeout #{user} 60"
+        else
+            if face1 =='AssFace'
+                send_message "What a cutie! <3"
+            else
+                if face1 == 'FrankerZ' || face1 == 'LilZ'
+                    send_message "I love dogs!"
+            end
+        end
+        send_message "Congratulations!"
+    end
+    else
+        if (face1 == face2) || (face1 == face3) || (face2 == face3)
+            send_message "So close!"
+        else
+            send_message "Better luck next time!"
+        end
+    end
+    send_message "You rolled: #{face1} #{face2} #{face3}"
+end
+
+def play_chance(user)
+    result = rand(5) + 1
+    if result == 3
+        send_message "Bad luck, #{user}! You've been timed out for 20 seconds"
+        send_message ".timeout #{user} 20"
+    else
+        send_message "What good luck you have, #{user}!"
+    end
+    send_message "You rolled: #{result}"
+end
 
 
 client = Twitch::Chat::Client.new(channel: 'dragnflier', nickname: 'dragnflier', password: 'oauth:r3q976rwwqira80pswjha1xs98me2p') do
@@ -100,9 +104,9 @@ client = Twitch::Chat::Client.new(channel: 'dragnflier', nickname: 'dragnflier',
                 say_hello(user, message)
             when /MaiWaifu/ then
                 send_message "MaiWaifu"
-            when /!\S*touch\Z/i then
+            when /\A!\S*touch\Z/i then
                 be_touched(user)
-            when /!\S*anal\Z/i then
+            when /\A!\S*anal\Z/i,  /\A!.*cock/, /\A!.*penis/, /\A!.*pen15/, /\A!.*vagina/, /\A!.*pussy/ then
                 be_disgusted(user)
             when /LillyBag/ then
                 send_message "CatBag + MaiWaifu = LillyBag"
@@ -114,7 +118,7 @@ client = Twitch::Chat::Client.new(channel: 'dragnflier', nickname: 'dragnflier',
                 send_message "I'm feeling good, #{user}. Thanks for asking"
             when /dragn/i && /right/i then
                 send_message "I have no idea what you're talking about, #{user}"
-            when /dragn/i && /senpai/i then
+            when /dragn/i && /se(n|m)pai/i then
                 send_message "You can just call me Lilly, #{user}"
             when /FrankerZ/ then
                 send_message "FrankerZ LilZ LilyZ <3"
@@ -122,17 +126,44 @@ client = Twitch::Chat::Client.new(channel: 'dragnflier', nickname: 'dragnflier',
                 send_message "Isn't she cute? LilyZ <3"
             when /Lily/ then
                 send_message "Do you mean LilyZ?"
-            when /!quote/i then
+            when /\A!quote/i then
                 send_message JSON.parse(File.read('responses.json'))['quotes'].sample
-            when /!commands/i then
+            when /\A!commands/i then
                 send_message "I can respond to my name and any of these commands, plus many more: #{JSON.parse(File.read('responses.json'))['commands'].sample}"
-            when /!time/i then
+            when /\A!time/i then
                 send_message "The current time in Melbourne, Australia is #{Time.now.strftime('%I:%M %p')}"
+            when /\A!!\Z/, /\S.*!!\Z/ then
+                send_message "#{message}!"
+            when /\A!.*pat/i then
+                send message "*scrunches face at #{user}*"
+            when /\A!.*poke/i then
+                send_message "Don't do that!"
+                send_message ".timeout #{user} 1"
+            when /\A!.*kiss/i then
+                unless user == "Astrious" || user == "Dragnflier"
+                    send_message "I don't think Astrious appreciates that, #{user}"
+                else
+                    send_message "*blushes*"
+            when /\A!.*slots/i then
+                play_slots(user, message)
+            when /\A!chance/i then
+                play_chance(user)
+            when /\A!.*punch/, /\A!.*attack/ then
+                send_message "We don't accept violence here"
+                send_message ".timeout #{user} 1"
             else
-                puts commands[message]
-                send_message commands[message].gsub!("user",user) if commands.key?(message)
+                 if commands.key?(message)
+                     send_message commands[message].gsub!("user",user)
+                 else
+                    if message =~ /\A!.*/
+                        commands[message] = "This feature has not yet been implemented."
+                        File.open("commands.json", "w") do |f|
+                            f.write(JSON.pretty_generate(commands))
+                        end
+                    end
+                end
+            end
         end
     end
-end
 
 client.run!
