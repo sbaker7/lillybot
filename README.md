@@ -105,8 +105,8 @@ The format for JSON is:
 
 ```JSON
 {
-    "command1" : "Response",
-    "command2" : "Response 2"
+    "!command1" : "Response",
+    "!command2" : "Response 2"
 }
 ```
 
