@@ -99,11 +99,11 @@ def guessing_game
 end
 
 def make_guess(user, guess)
-    if guess == $val
+    if guess.to_i == $val
         send_message "Congratulations #{user}, you got it!"
         $val = nil
     else
-        if guess < $val
+        if guess.to_i < $val
             send_message "Higher, #{user}."
         else
             send_message "Lower, #{user}."
