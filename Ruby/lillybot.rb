@@ -110,6 +110,7 @@ end
 client = Twitch::Chat::Client.new(channel: 'dragnflier', nickname: 'dragnflier', password: 'oauth:r3q976rwwqira80pswjha1xs98me2p') do
 
     commands = JSON.parse(File.read('commands.json'))
+    val = nil
 
     on(:connect) do
         send_message 'Hi guys!'
