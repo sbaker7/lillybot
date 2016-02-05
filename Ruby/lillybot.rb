@@ -98,7 +98,7 @@ def guessing_game
     end
 end
 
-def make_guess(user, guess) 
+def make_guess(user, guess)
     if guess == $val
         send_message "Congratulations #{user}, you got it!"
         $val = nil
@@ -107,6 +107,7 @@ def make_guess(user, guess)
             send_message "Higher, #{user}."
         else
             send_message "Lower, #{user}."
+        end
     end
 end
 
