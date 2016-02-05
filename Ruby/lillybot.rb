@@ -90,20 +90,20 @@ def play_chance(user)
 end
 
 def guessing_game
-    if val == nil
-        val = rand(50) +1
+    if $val == nil
+        $val = rand(50) +1
         send_message "I've started a guessing game! Try guess the number between 1 and 50 using !guess"
     else
         send_message "A guessing game has already been started. Try guess the number between 1 and 50 using !guess"
     end
 end
 
-def make_guess(user, guess)
-    if guess == val
+def make_guess(user, guess) 
+    if guess == $val
         send_message "Congratulations #{user}, you got it!"
-        val = nil
+        $val = nil
     else
-        if guess < val
+        if guess < $val
             send_message "Higher, #{user}."
         else
             send_message "Lower, #{user}."
@@ -113,7 +113,7 @@ end
 client = Twitch::Chat::Client.new(channel: 'dragnflier', nickname: 'dragnflier', password: 'oauth:r3q976rwwqira80pswjha1xs98me2p') do
 
     commands = JSON.parse(File.read('commands.json'))
-    val = nil
+    $val = nil
 
     on(:connect) do
         send_message 'Hi guys!'
