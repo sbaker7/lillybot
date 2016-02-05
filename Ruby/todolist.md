@@ -58,6 +58,7 @@ Some of these commands will also accept variants.
 |!catslots |Play slots with Lilly using CatBag emotes |
 |!dogslots | Play slots with Lilly using dog emotes |
 |!chance | Play a game of chance. Don't get 3! |
+|!21rules | Learn the rules of 21 |
 
 
 ##Responsive phrases
@@ -85,7 +86,6 @@ Most of these responses use [regular expressions](http://www.tutorialspoint.com/
 |!JapanBot| Lilly starts speaking Japanese |
 |!spambot | Lilly reluctantly becomes a sellout |
 |!test | This just checks if you're a moderator |
-|!21rules | Learn the rules of 21 |
 |!reset21 | Restart the 21 game |
 |!start21 | Start a 21 game |
 |!hit | Get another number |
