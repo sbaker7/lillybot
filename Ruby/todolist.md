@@ -58,6 +58,7 @@ Some of these commands will also accept variants.
 |!catslots |Play slots with Lilly using CatBag emotes |
 |!dogslots | Play slots with Lilly using dog emotes |
 |!chance | Play a game of chance. Don't get 3! |
+|!guessinggame | Guess the number! |
 |!21rules | Learn the rules of 21 |
 
 
@@ -92,7 +93,6 @@ Most of these responses use [regular expressions](http://www.tutorialspoint.com/
 |!stand | Choose to wait |
 |!endround | Finish the 21 game |
 |!settings | Find out which settings are on |
-|!guessinggame | Guess the number! |
 |!meme | Get a random meme |
 |!lillybot | Turns Lilly on and off |
 
