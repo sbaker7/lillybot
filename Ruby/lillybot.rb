@@ -1,5 +1,4 @@
 require_relative './lib/twitch/chat'
-require_relative 'blackjack'
 require 'json'
 
 def say_hello(user, message)
@@ -93,6 +92,7 @@ end
 def guessing_game
     if val == nil
         val = rand(50) +1
+        send_message "I've started a guessing game! Try guess the number between 1 and 50 using !guess"
     else
         send_message "A guessing game has already been started. Try guess the number between 1 and 50 using !guess"
     end
@@ -103,7 +103,10 @@ def make_guess(user, guess)
         send_message "Congratulations #{user}, you got it!"
         val = nil
     else
-        send_message "That's not it, #{user}. Try again"
+        if guess < val
+            send_message "Higher, #{user}."
+        else
+            send_message "Lower, #{user}."
     end
 end
 
@@ -170,7 +173,7 @@ client = Twitch::Chat::Client.new(channel: 'dragnflier', nickname: 'dragnflier',
             when /\A!.*(punch|attack)/ then
                 send_message "We don't accept violence here"
                 send_message ".timeout #{user} 1"
-            when /\A!guessinggame\Z/ then
+            when /\A!guessinggame/ then
                 guessing_game
             when /\A!guess\s\d+/
                 make_guess(user, message.scan(/\d+/).first)
