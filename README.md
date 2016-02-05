@@ -114,7 +114,7 @@ For more complex commands or responses, such as those that use Regular Expressio
 
 ```ruby
 case message
-    when /dragn/i && /\Ah(i|ello|ey)/i then
+    when /Lilly/i && /\Ah(i|ello|ey)/i then
         say_hello(user, message)
     when /MaiWaifu/ then
         send_message "MaiWaifu"
