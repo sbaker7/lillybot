@@ -1,4 +1,6 @@
 require_relative './lib/twitch/chat'
+require_relative 'blackjack'
+require 'rufus-scheduler'
 require 'json'
 
 def say_hello(user, message)
@@ -28,13 +30,19 @@ def be_disgusted(user)
     send_message "You're disgusting..."
 end
 
-# def spam_bot(spam = true)
-#     Thread.new do |spam|
-#         while (spam)
-#             SCHEDULER.every '1800s', :first_in => 0 do
-#                 send_message "Go Astrious, go! Make sure to follow Astrious on twitter, @Astriousruns. You can play games and talk to me too! Try !commands"
-#     end
-# end
+def spam_bot(user, spam = true)
+    if user == "astrious" || user == "dragnflier"
+        if spam
+            $scheduler = Rufus::Scheduler.new
+            $job = $scheduler.every '1m', first_in: '0s' do
+                send_message "Go Astrious, go! Make sure to follow Astrious on twitter, @Astriousruns. You can play games and talk to me too! Try !commands"
+            end
+        else
+            send_message "I can stop now? Being a sell out is tiring work..."
+            $scheduler.unschedule($job)
+        end
+    end
+end
 
 def play_slots(user, message)
     file = File.read("responses.json")
@@ -90,8 +98,8 @@ def play_chance(user)
 end
 
 def guessing_game
-    if $val == nil
-        $val = rand(50) +1
+    if $guessing_value == nil
+        $guessing_value = rand(50) +1
         send_message "I've started a guessing game! Try guess the number between 1 and 50 using !guess"
     else
         send_message "A guessing game has already been started. Try guess the number between 1 and 50 using !guess"
@@ -99,11 +107,11 @@ def guessing_game
 end
 
 def make_guess(user, guess)
-    if guess.to_i == $val
+    if guess.to_i == $guessing_value
         send_message "Congratulations #{user}, you got it!"
-        $val = nil
+        $guessing_value = nil
     else
-        if guess.to_i < $val
+        if guess.to_i < $guessing_value
             send_message "Higher, #{user}."
         else
             send_message "Lower, #{user}."
@@ -111,10 +119,17 @@ def make_guess(user, guess)
     end
 end
 
+def print_messages(messages)
+    messages.reverse.each do |message|
+        send_message message.to_s.gsub("[", "").gsub("]", "")
+    end
+end
+
 client = Twitch::Chat::Client.new(channel: 'dragnflier', nickname: 'dragnflier', password: 'oauth:r3q976rwwqira80pswjha1xs98me2p') do
 
     commands = JSON.parse(File.read('commands.json'))
-    $val = nil
+    $guessing_value = nil
+    $blackjack_game = nil
 
     on(:connect) do
         send_message 'Hi guys!'
@@ -174,19 +189,36 @@ client = Twitch::Chat::Client.new(channel: 'dragnflier', nickname: 'dragnflier',
             when /\A!.*(punch|attack)/ then
                 send_message "We don't accept violence here"
                 send_message ".timeout #{user} 1"
-            when /\A!guessinggame/ then
+            when /\A!spambot\s(on|off)\Z/i then
+                if message =~ /on/i
+                    spam_bot(user)
+                else
+                    spam_bot(user, false)
+                end
+            when /\A!guessinggame/i then
                 guessing_game
             when /\A!guess\s\d+/
                 make_guess(user, message.scan(/\d+/).first)
+            when /\A!start21\Z/i then
+                $blackjack_game = BlackJackGame.new
+                send_message "I've started a new game of 21. Draw a card with !hit, or !stand if you think you're too close to 21"
+            when /\A!hit\Z/i then
+                print_messages $blackjack_game.hit(user) if $blackjack_game != nil
+            when /\A!stand\Z/i then
+                print_messages $blackjack_game.stand(user) if $blackjack_game != nil
+            when /\A!endround\Z/i then
+                print_messages $blackjack_game.end_game if $blackjack_game != nil
             else
                  if commands.key?(message)
-                     send_message commands[message].gsub!("user",user)
+                     puts "Found it!"
+                     send_message commands[message].gsub("user", user)
                  else
                     if message =~ /\A!.*/
-                        commands[message] = "This feature has not yet been implemented."
+                        commands[message] = "That feature has not yet been implemented."
                         File.open("commands.json", "w") do |f|
                             f.write(JSON.pretty_generate(commands))
                         end
+                        send_message commands[message]
                     end
                 end
             end
