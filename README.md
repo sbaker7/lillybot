@@ -87,7 +87,41 @@ Here's a quick list of example commands to get you started. You can play around 
 
 A complete list of the commands available for Lillybot and upcoming commands can be found [here](https://github.com/sbaker7/lillybot/blob/development/Ruby/todolist.md)
 
+---
 
+##Hosting
+
+LillyBot is currently hosted on a DigitalOcean Droplet. Setting up a droplet is very easy and a good way to host your bot. It does cost $5 a month for the smallest option (unless you are really dedicated and like to create/destroy droplets for the 0.007c per hour option) but to have your bot available at any time, it's a valueable option!
+
+I've set up my droplet with Ubuntu 15.10 x64, 512MB memory, 1 CPU, 20GB SSD and 1000GB transfer. I also like to use [oh-my-zsh](http://ohmyz.sh) for some handy shortcuts with git. [Vim](http://www.vim.org/about.php) is also a great option for quick edits.
+
+---
+
+##Adding Commands
+
+For any simple commands such as `!mycreator`, you can easily add these to the JSON file. Lillybot refers to a commands.json file for these simple commands.
+
+The format for JSON is:
+
+```JSON
+{
+    "command1" : "Response",
+    "command2" : "Response 2"
+}
+```
+
+For more complex commands or responses, such as those that use Regular Expressions, you will need to add those to the case statement in the Lillybot.rb file.
+
+```ruby
+case message
+    when /dragn/i && /\Ah(i|ello|ey)/i then
+        say_hello(user, message)
+    when /MaiWaifu/ then
+        send_message "MaiWaifu"
+    when /\A!\S*touch\Z/i then
+        be_touched(user)
+end
+```
 
 
 
