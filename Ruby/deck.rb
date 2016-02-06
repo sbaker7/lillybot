@@ -17,11 +17,19 @@ class Deck
     @availableCards = cards.shuffle
   end
 
-  def draw()
-    return @availableCards.pop
+  def is_empty()
+    @availableCards.length == 0
+  end
+
+  def draw(num = 1)
+    cards = []
+    (1..num).each do
+      cards << @availableCards.pop
+    end
+    cards
   end
 
   def to_s
-      puts "\##{@availableCards.length} cards in deck: #{@availableCards.join(",")}"
+    "\##{@availableCards.length} cards in deck: #{@availableCards.join(",")}"
   end
 end
