@@ -4,11 +4,11 @@ class Card
         @value = value
     end
 
-    def getShortname
+    def get_shortname
         @shortname
     end
 
-    def getValue
+    def get_value
         @value
     end
 

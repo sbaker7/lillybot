@@ -120,8 +120,10 @@ def make_guess(user, guess)
 end
 
 def print_messages(messages)
-    messages.reverse.each do |message|
-        send_message message.to_s.gsub("[", "").gsub("]", "")
+    if messages != nil
+        messages.reverse.each do |message|
+            send_message message.to_s.gsub("[", "").gsub("]", "")
+        end
     end
 end
 

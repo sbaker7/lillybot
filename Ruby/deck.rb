@@ -26,7 +26,11 @@ class Deck
     (1..num).each do
       cards << @availableCards.pop
     end
-    cards
+    if cards.length == 1
+        cards[0]
+    else
+        cards
+    end
   end
 
   def to_s

@@ -1,109 +1,109 @@
 require_relative "./lib/twitch/chat"
 require_relative "card"
 require_relative "player"
+require_relative "deck"
 require 'awesome_print'
 
 class BlackJackGame
 
     def initialize
         messages = []
-        $deck = []
-        $players = []
-        $stillplaying = 0
-        ranks = %w{A 2 3 4 5 6 7 8 9 10 J Q K}
-        suits = %w{S H D C}
-        puts "initializing!"
-        suits.each do |suit|
-          ranks.size.times do |i|
-              value = 0
-              case ranks[i]
-                when 'A' then
-                    value = 1
-                when 'J', 'Q', 'K' then
-                    value = 10
-                else
-                    value = ranks[i]
-                end
-                $deck << (Card.new("#{ranks[i]}#{suit}", value))
-            end
-          end
+        @deck = Deck.new()
+        @players = []
+        @stillplaying = 0
     end
 
-    def getRemaining
-        remaining = ["Players remaining: "].concat $players
+    def get_remaining
+        @players.any?{|a| a.get_state == "p"}
     end
 
     def finish
         messages = []
         messages << "It looks like everyone has finished playing, so it must be my turn!"
-        me = new Player(self, $deck.delete_at(rand($deck.size)))
-        while (me.total < 18)
-            me.draw($deck.delete_at(rand($deck.size)))
+        me = Player.new(self, @deck.draw)
+        while (me.get_total < 18)
+            me.draw(@deck.draw)
         end
-        messages << "I drew #{me.hand}, giving me a total of #{me.total}. Let's see who won!"
+        messages << "I drew #{me.get_hand}, giving me a total of #{me.get_total}. Let's see who won!"
 
-        winners = $players.any?{|a| a.total == 21}
-        if winners == nil
-            winners = $players.any?{|a| a.total > me.total && a.total < 21}
+
+        if me.get_total == 21
+            message << "I win! Try again next time, everyone!"
+        else
+            winners = @players.find{|a| a.get_state == "w"}
             if winners != nil
-                messages << "The winner(s) are: #{winners}! Congratulations!"
+                messages << "The winners are: #{winners}! Congratulations!"
             else
-                messages << "I'm the winner! Better luck next time!"
+                eligibleplayers = @players.find{|a| a.get_state == "s"}
+                if eligibleplayers != nil
+                    highscore = eligibleplayers.sort_by{|a| a.get_total}
+                    puts "The highscore is #{highscore}"
+                    winners = @players.find{|a| a.get_total == highscore}
+                    if me.get_total > 21 || (highscore > me.get_total && me.score < 21)
+                        messages < "The winners are: #{winners} with a score of #{highscore}. Congratulations!"
+                    else
+                        messages << "I guess I am the winner, with a score of #{me.get_total}! Better luck next time, guys!"
+                    end
+                else
+                    messages << "I guess no one wins this round." if me.get_total > 21
+                    messages << "I guess I am the winner, with a score of #{me.get_total}! Better luck next time, guys!" if me.get_total < 21
             end
         end
         messages
     end
 
-    def addPlayer(user)
+    def add_player(user)
         messages = []
-        card = rand($deck.size)
-        $players << Player.new(user, $deck[card])
-        $deck.delete_at(card)
-        messages << "Player #{$players.last.getPlayer} has joined the game! They drew a #{$players.last.getHand.last}, which gives them a total score of #{$players.last.getTotal}"
-        $stillplaying += 1
+        @players << Player.new(user, @deck.draw)
+        messages << "Player #{@players.last.get_player} has joined the game! They drew a #{@players.last.get_hand.last}, which gives them a total score of #{@players.last.get_total}"
+        @stillplaying += 1
         card = nil
         messages
     end
 
     def hit(user)
-        puts "Remaining cards: #{ap $deck}"
+        puts "Remaining cards: #{@deck}"
         messages = []
-        currentplayerindex = $players.find_index{|a| a.getPlayer == user}
+        currentplayerindex = @players.find_index{|a| a.get_player == user}
         if currentplayerindex == nil
-            messages << addPlayer(user)
+            messages << add_player(user)
         else
-            currentplayer = $players[currentplayerindex]
-            if currentplayer.getState == "p"
-                newcard = rand($deck.length)
-                currentplayer.draw($deck.delete_at(newcard))
-                case currentplayer.getTotal
+            currentplayer = @players[currentplayerindex]
+            puts "#{currentplayer} has a total of #{currentplayer.get_total} and has a state #{currentplayer.get_state}"
+            if currentplayer.get_state == "p"
+                currentplayer.draw(@deck.draw)
+                case currentplayer.get_total
                 when 1..20 then
-                    messages << "#{currentplayer} drew a #{currentplayer.getHand.last}, which gives them a total of #{currentplayer.getTotal}. !hit or !stand?"
+                    messages << "#{currentplayer} drew a #{currentplayer.get_hand.last}, which gives them a total of #{currentplayer.get_total}. !hit or !stand?"
                 when 21 then
-                    messages << "#{currentplayer} drew a #{currentplayer.getHand.last}, which gives them a total of #{currentplayer.getTotal}. Congratulations!"
+                    messages << "#{currentplayer} drew a #{currentplayer.get_hand.last}, which gives them a total of #{currentplayer.get_total}. Congratulations!"
                 else
-                    messages <<  "#{currentplayer} drew a #{currentplayer.getHand.last}, which gives them a total of #{currentplayer.getTotal}. That means they've bust! Sorry, #{currentplayer}!"
+                    messages <<  "#{currentplayer} drew a #{currentplayer.get_hand.last}, which gives them a total of #{currentplayer.get_total}. That means they've bust! Sorry, #{currentplayer}!"
                 end
             else
                 messages << "You've already won or busted, #{currentplayer}. Let's wait for everyone else."
             end
         end
-        finish if $stillplaying == 0
-        newcard = nil
-        messages.concat getRemaining
+        messages.concat finish if !get_remaining
+        messages
     end
 
     def stand(user)
         messages = []
-        currentplayer = $players.any?{|a| a.user == user}
-        if currentplayer != false && currentplayer.getState == "p"
-            currentplayer.stand
-            $stillplaying -=1
-            messages << "#{currentplayer.getPlayer} has chosen to stand. Their total is #{currentplayer.getTotal}. Let's wait for everyone else to finish"
+        if @players.find_index{|a| a.get_player == user} != nil
+                currentplayer = @players[@players.find_index{|a| a.get_player == user}]
+            if  currentplayer.get_state == "p"
+                currentplayer.stand
+                messages << "#{currentplayer.get_player} has chosen to stand. Their total is #{currentplayer.get_total}. Let's wait for everyone else to finish"
+            else
+                if currentplayer.get_state != "p"
+                    messages << "You've either busted or won, #{user}. Let's wait to see what everyone else gets"
+                end
+            end
         else
             messages << "You aren't playing the game yet, #{user}. Start with !hit" if currentplayer == false
-            messages << "You've either busted or won, #{user}. Let's wait to see what everyone else gets" if currentplayer.state != "p" && currentplayer != false
         end
+        messages.concat finish if !get_remaining
         messages
     end
 end
