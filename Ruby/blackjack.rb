@@ -28,7 +28,7 @@ class BlackJackGame
 
 
         if me.get_total == 21
-            message << "I win! Try again next time, everyone!"
+            messages << "I win! Try again next time, everyone!"
         else
             winners = @players.find{|a| a.get_state == "w"}
             if winners != nil
