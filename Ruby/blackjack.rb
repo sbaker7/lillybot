@@ -47,6 +47,7 @@ class BlackJackGame
                 else
                     messages << "I guess no one wins this round." if me.get_total > 21
                     messages << "I guess I am the winner, with a score of #{me.get_total}! Better luck next time, guys!" if me.get_total < 21
+                end
             end
         end
         messages
