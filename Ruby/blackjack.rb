@@ -36,16 +36,17 @@ class BlackJackGame
             else
                 eligibleplayers = @players.find{|a| a.get_state == "s"}
                 if eligibleplayers != nil
-                    highscore = eligibleplayers.sort_by{|a| a.get_total}
+                    highscore = eligibleplayers.sort_by{|a| a.get_total} if eligibleplayers.kind_of?(Array)
+                    highscore = eligibleplayers.get_total if eligibleplayers.kind_of?(Player)
                     puts "The highscore is #{highscore}"
                     winners = @players.find{|a| a.get_total == highscore}
-                    if me.get_total > 21 || (highscore > me.get_total && me.score < 21)
-                        messages < "The winners are: #{winners} with a score of #{highscore}. Congratulations!"
+                    if me.get_total > 21 || (highscore > me.get_total && me.get_total < 21)
+                        messages << "The winners are: #{winners} with a score of #{highscore}. Congratulations!"
                     else
                         messages << "I guess I am the winner, with a score of #{me.get_total}! Better luck next time, guys!"
                     end
                 else
-                    messages << "I guess no one wins this round." if me.get_total > 21
+                    messages << "We've all busted, so I guess no one wins this round." if me.get_total > 21
                     messages << "I guess I am the winner, with a score of #{me.get_total}! Better luck next time, guys!" if me.get_total < 21
                 end
             end
