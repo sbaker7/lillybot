@@ -101,7 +101,7 @@ Here's a quick list of example commands to get you started. You can play around 
 
 ###Complete List (With Todos)
 
-A complete list of the commands available for Lillybot and upcoming commands can be found [here](https://github.com/sbaker7/lillybot/blob/development/Ruby/todolist.md)
+A complete list of the commands available for Lillybot and upcoming commands can be found [here](todolist.md)
 
 ---
 
