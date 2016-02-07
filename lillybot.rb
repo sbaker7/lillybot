@@ -195,19 +195,16 @@ client = Twitch::Chat::Client.new(channel: configs["channel"], nickname: configs
             when /\A!.*(punch|attack)/ then
                 send_message "We don't accept violence here"
                 send_message ".timeout #{user} 1"
-            when /\A!spambot/i then
+            when /\A!spambot\s(on|off)\Z/i then
                 if user == "astrious" || user == "dragnflier"
                     if message =~ /on/i
                         spam_bot(user)
                     else
-                        if message =~ /off/i
-                            spam_bot(user, false)
-                        else
-                            send_message "Did you mean !spambot on or off? I'm not quite sure, #{user}."
-                        end
+                        spam_bot(user, false)
                     end
-                else
-                    send_message "You don't have permission to do that, #{user}"
+                end
+            when /\A!spambot\Z/i then
+                send_message "Should I turn off or on? I'm not sure, #{user}"
             when /\A!guessinggame/i then
                 guessing_game
             when /\A!guess\s\d+/
