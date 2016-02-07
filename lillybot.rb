@@ -34,7 +34,7 @@ def spam_bot(user, spam = true)
     if user == "astrious" || user == "dragnflier"
         if spam
             @scheduler = Rufus::Scheduler.new
-            @job = @scheduler.every '1m', first_in: '0s' do
+            @job = @scheduler.every '10m', first_in: '0s' do
                 send_message "Go Astrious, go! Make sure to follow Astrious on twitter, @Astriousruns. You can play games and talk to me too! Try !commands"
             end
         else
@@ -195,12 +195,19 @@ client = Twitch::Chat::Client.new(channel: configs["channel"], nickname: configs
             when /\A!.*(punch|attack)/ then
                 send_message "We don't accept violence here"
                 send_message ".timeout #{user} 1"
-            when /\A!spambot\s(on|off)\Z/i then
-                if message =~ /on/i
-                    spam_bot(user)
+            when /\A!spambot/i then
+                if user == "astrious" || user == "dragnflier"
+                    if message =~ /on/i
+                        spam_bot(user)
+                    else
+                        if message =~ /off/i
+                            spam_bot(user, false)
+                        else
+                            send_message "Did you mean !spambot on or off? I'm not quite sure, #{user}."
+                        end
+                    end
                 else
-                    spam_bot(user, false)
-                end
+                    send_message "You don't have permission to do that, #{user}"
             when /\A!guessinggame/i then
                 guessing_game
             when /\A!guess\s\d+/
