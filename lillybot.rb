@@ -181,7 +181,7 @@ client = Twitch::Chat::Client.new(channel: configs["channel"], nickname: configs
                 send_message "Don't do that!"
                 send_message ".timeout #{user} 1"
             when /\A!.*kiss/i then
-                unless user == "Astrious" || user == "Dragnflier"
+                unless user == "astrious" || user == "dragnflier"
                     send_message "I don't think Astrious appreciates that, #{user}"
                 else
                     send_message "*blushes*"
