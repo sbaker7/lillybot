@@ -141,7 +141,7 @@ client = Twitch::Chat::Client.new(channel: configs["channel"], nickname: configs
 
     on(:message) do |user, message|
         case message
-            when /dragn/i && /\Ah(i|ello|ey)/i then
+        when /lilly/i && /\Ah(i|ello|ey)/i then
                 say_hello(user, message)
             when /MaiWaifu/ then
                 send_message "MaiWaifu"
@@ -155,11 +155,11 @@ client = Twitch::Chat::Client.new(channel: configs["channel"], nickname: configs
                 send_message "CatBag <3"
             when /\Athank.*\ALilly\Z/i then
                 send_message "You're welcome, #{user}"
-            when /dragn/i && /how are you/i then
+            when /lilly/i && /how are you/i then
                 send_message "I'm feeling good, #{user}. Thanks for asking"
-            when /dragn/i && /right/i then
+            when /lilly/i && /right/i then
                 send_message "I have no idea what you're talking about, #{user}"
-            when /dragn/i && /se(n|m)pai/i then
+            when /lilly/i && /se(n|m)pai/i then
                 send_message "You can just call me Lilly, #{user}"
             when /FrankerZ/ then
                 send_message "FrankerZ LilZ LilyZ <3"
