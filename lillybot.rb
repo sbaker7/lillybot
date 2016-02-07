@@ -141,7 +141,7 @@ client = Twitch::Chat::Client.new(channel: configs["channel"], nickname: configs
 
     on(:message) do |user, message|
         case message
-        when /lilly/i && /\Ah(i|ello|ey)/i then
+        when /\Ah(i|ello|ey).*lilly/i then
                 say_hello(user, message)
             when /MaiWaifu/ then
                 send_message "MaiWaifu"
@@ -155,11 +155,11 @@ client = Twitch::Chat::Client.new(channel: configs["channel"], nickname: configs
                 send_message "CatBag <3"
             when /\Athank.*\ALilly\Z/i then
                 send_message "You're welcome, #{user}"
-            when /lilly/i && /how are you/i then
+            when /how are you.*lilly/i then
                 send_message "I'm feeling good, #{user}. Thanks for asking"
-            when /lilly/i && /right/i then
+            when /lilly/i && /right.*?/i then
                 send_message "I have no idea what you're talking about, #{user}"
-            when /lilly/i && /se(n|m)pai/i then
+            when /lilly.*se(n|m)pai/i then
                 send_message "You can just call me Lilly, #{user}"
             when /FrankerZ/ then
                 send_message "FrankerZ LilZ LilyZ <3"
@@ -170,7 +170,7 @@ client = Twitch::Chat::Client.new(channel: configs["channel"], nickname: configs
             when /\A!quote/i then
                 send_message JSON.parse(File.read('configs/responses.json'))['quotes'].sample
             when /\A!commands/i then
-                send_message "I can respond to my name and any of these commands, plus many more: #{JSON.parse(File.read('configs/responses.json'))['commands'].sample}"
+                send_message "I can respond to my name and any of these commands, plus many more: #{JSON.parse(File.read('configs/commands.json')).keys.sample(5).join(", ")}"
             when /\A!time/i then
                 send_message "The current time in Melbourne, Australia is #{Time.now.getlocal("+11:00").strftime('%I:%M %p')}"
             when /(\A!!|\S.*!!)\Z/ then

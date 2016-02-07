@@ -1,5 +1,5 @@
 {
-    "commands" : ["slots", "!start21", "!chance", "!quote", "!mycreator", "MaiWaifu", "!sellout"],
+    "commands" : ["!slots", "!start21", "!chance", "!quote", "!mycreator", "MaiWaifu", "!sellout"],
     "greetings" : ["Hi user!", "Hello user! How are you?", "Oh hi there, user! How are you today?"],
     "quotes" : [
         "I merely have a healthy adolescent sex drive.", "You are a beautiful person, user, please, never apologize for that.",

@@ -20,7 +20,7 @@ Welcome to Lillybot! I am a Twitch.TV bot written in Ruby. I respond to a number
 
 Add a `login.json` file to a res/ directory in the repository. It should look like this, with your details filled in:
 
-```
+```JSON
 {
     "channel" : "yourchannelname",
     "nickname" : "yourusername",
@@ -63,6 +63,7 @@ These are the tags we use for our commit messages:
 3. A modified version of [Twitch-chat](https://github.com/sbaker7/twitch-chat) (stored locally in libs folder, originally by [EnotPoloskun](https://github.com/enotpoloskun/twitch-chat))
 4. Activesupport
 5. Eventmachine
+6. Rufus-Scheduler
 
 ---
 
@@ -109,7 +110,7 @@ A complete list of the commands available for Lillybot and upcoming commands can
 
 LillyBot is currently hosted on a DigitalOcean Droplet. Setting up a droplet is very easy and a good way to host your bot. It does cost $5 a month for the smallest option (unless you are really dedicated and like to create/destroy droplets for the 0.007c per hour option) but to have your bot available at any time, it's a valueable option!
 
-I've set up my droplet with Ubuntu 15.10 x64, 512MB memory, 1 CPU, 20GB SSD and 1000GB transfer. I also like to use [oh-my-zsh](http://ohmyz.sh) for some handy shortcuts with git. [Vim](http://www.vim.org/about.php) is also a great option for quick edits.
+I've set up my droplet with Ubuntu 15.10 x64, 512MB memory, 1 CPU, 20GB SSD and 1000GB transfer. I also like to use [oh-my-zsh](http://ohmyz.sh) for some handy shortcuts with git. [Vim](http://www.vim.org/about.php) is also a great option for quick edits but can be complicated for beginners. In this case, I'd suggest doing your edits on your local machine and pushing them up to the server.
 
 ---
 
