@@ -5,4 +5,3 @@ source "https://rubygems.org"
 gem 'eventmachine'
 gem 'activesupport'
 gem 'rufus-scheduler'
-gem 'awesome_print'

@@ -1,7 +1,6 @@
 require_relative "card"
 require_relative "player"
 require_relative "deck"
-require 'awesome_print'
 
 class BlackJackGame
 
