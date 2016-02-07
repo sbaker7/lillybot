@@ -71,7 +71,7 @@ class BlackJackGame
         messages = []
         currentplayerindex = @players.find_index{|a| a.get_player == user}
         if currentplayerindex == nil
-            messages << add_player(user)
+            messages.concat add_player(user)
         else
             currentplayer = @players[currentplayerindex]
             puts "#{currentplayer} has a total of #{currentplayer.get_total} and has a state #{currentplayer.get_state}"
