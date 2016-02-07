@@ -176,7 +176,7 @@ client = Twitch::Chat::Client.new(channel: configs["channel"], nickname: configs
             when /(\A!!|\S.*!!)\Z/ then
                 send_message "#{message}!"
             when /\A!.*pat/i then
-                send message "*scrunches face at #{user}*"
+                send_message "*scrunches face at #{user}*"
             when /\A!.*poke/i then
                 send_message "Don't do that!"
                 send_message ".timeout #{user} 1"
