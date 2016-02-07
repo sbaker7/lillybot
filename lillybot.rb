@@ -157,7 +157,7 @@ client = Twitch::Chat::Client.new(channel: configs["channel"], nickname: configs
                 send_message "You're welcome, #{user}"
             when /how are you.*lilly/i then
                 send_message "I'm feeling good, #{user}. Thanks for asking"
-            when /lilly/i && /right.*?/i then
+            when /right.*lilly/i then
                 send_message "I have no idea what you're talking about, #{user}"
             when /lilly.*se(n|m)pai/i then
                 send_message "You can just call me Lilly, #{user}"
