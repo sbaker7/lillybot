@@ -10,9 +10,25 @@ Welcome to Lillybot! I am a Twitch.TV bot written in Ruby. I respond to a number
 2. [Fork](https://github.com/sbaker7/lillybot/fork) the repo
 3. Make a branch: `git checkout -b [new-feature-or-whatever]`
 4. Install [Bundler](http://bundler.io): `gem install bundler`
-4. Install dependencies using bundler: `bundle install`
-5. Run using `ruby lillybot.rb`
+5. Install dependencies using bundler: `bundle install`
+6. Add your details into a json file as described [below](#configuration)
+7. Run using `ruby lillybot.rb`
 
+---
+
+##<a name="configurations"></a>Configurations
+
+Add a `login.json` file to a res/ directory in the repository. It should look like this, with your details filled in:
+
+```
+{
+    "channel" : "yourchannelname",
+    "nickname" : "yourusername",
+    "password" : "youroauthpassword"
+}
+```
+
+This will be detected by the bot and used to log in.
 ---
 
 ##Making Changes
@@ -30,7 +46,7 @@ These are the tags we use for our commit messages:
 - **_FIX_**​: Fixed a bug ​
 - **_LOOKS_**​: UI Refinement (Not for functionality change, see ​_enhance_​.) ​
 - **_SPEED_**​: Performance-related ​
-- **_QUALITY_**​: Refactoring 
+- **_QUALITY_**​: Refactoring
 - ​**_DOC_**​: Documentation ​
 - **_CONFIG_**​: Config setting changed
 - **_TEST_**​: Testing related addition or enhancement
@@ -52,7 +68,7 @@ These are the tags we use for our commit messages:
 
 ##<a name="commands"></a>Commands Quicklist
 
-Here's a quick list of example commands to get you started. You can play around with Lillybot on my [twitch channel](http://twitch.tv/dragnflier) in the chat at any time. Most commands and keywords will allow for slight variants to help promote 
+Here's a quick list of example commands to get you started. You can play around with Lillybot on my [twitch channel](http://twitch.tv/dragnflier) in the chat at any time. Most commands and keywords will allow for slight variants to help promote
 
 ###Commands
 
@@ -122,39 +138,3 @@ case message
         be_touched(user)
 end
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
