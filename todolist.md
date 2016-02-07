@@ -47,6 +47,7 @@ Some of these commands will also accept variants.
 |!pussy | Alternative to vagina |
 |!punch | Punch Lilly or someone else in chat |
 |!attack | Attack Lilly or someone else in the chat |
+|!spambot | Lilly reluctantly becomes a sellout |
 |!! | Lilly also gets excited |
 |!* | If a command isn't implemented yet, Lilly will make a note of it for addition later! |
 
@@ -60,6 +61,10 @@ Some of these commands will also accept variants.
 |!chance | Play a game of chance. Don't get 3! |
 |!guessinggame | Guess the number! |
 |!21rules | Learn the rules of 21 |
+|!start21 | Start a 21 game |
+|!hit | Get another number |
+|!stand | Choose to wait |
+|!endround | Finish the 21 game |
 
 
 ##Responsive phrases
@@ -85,17 +90,7 @@ Most of these responses use [regular expressions](http://www.tutorialspoint.com/
 | Command | Function |
 | --------| -------- |
 |!JapanBot| Lilly starts speaking Japanese |
-|!spambot | Lilly reluctantly becomes a sellout |
 |!test | This just checks if you're a moderator |
-|!reset21 | Restart the 21 game |
-|!start21 | Start a 21 game |
-|!hit | Get another number |
-|!stand | Choose to wait |
-|!endround | Finish the 21 game |
 |!settings | Find out which settings are on |
 |!meme | Get a random meme |
 |!lillybot | Turns Lilly on and off |
-
-
-
-
