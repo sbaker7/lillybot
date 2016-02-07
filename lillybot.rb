@@ -1,11 +1,11 @@
 require_relative './lib/twitch/chat'
-require_relative 'blackjack'
+require_relative './blackjack/blackjack'
 require 'rufus-scheduler'
 require 'json'
 
 def say_hello(user, message)
     if user != "astrious" && user != "dragnflier" && user != "catbag"
-        send_message JSON.parse(File.read("responses.json"))["greetings"].sample.sub!("user", "#{user}")
+        send_message JSON.parse(File.read("configs/responses.json"))["greetings"].sample.sub!("user", "#{user}")
     else
         if user == "astrious"
             send_message "Hi Astrious, I missed you! Ready to stream again today? <3"
@@ -45,7 +45,7 @@ def spam_bot(user, spam = true)
 end
 
 def play_slots(user, message)
-    file = File.read("responses.json")
+    file = File.read("configs/responses.json")
     responses = JSON.parse(file)
     faces = nil
     if message =~ /cat/i
@@ -131,7 +131,7 @@ configs = JSON.parse(File.read("res/login.json"))
 
 client = Twitch::Chat::Client.new(channel: configs["channel"], nickname: configs["nickname"], password: configs["password"]) do
 
-    commands = JSON.parse(File.read('commands.json'))
+    commands = JSON.parse(File.read('configs/commands.json'))
     @guessing_value = nil
     @blackjack_game = nil
 
@@ -168,9 +168,9 @@ client = Twitch::Chat::Client.new(channel: configs["channel"], nickname: configs
             when /Lily/ then
                 send_message "Do you mean LilyZ?"
             when /\A!quote/i then
-                send_message JSON.parse(File.read('responses.json'))['quotes'].sample
+                send_message JSON.parse(File.read('configs/responses.json'))['quotes'].sample
             when /\A!commands/i then
-                send_message "I can respond to my name and any of these commands, plus many more: #{JSON.parse(File.read('responses.json'))['commands'].sample}"
+                send_message "I can respond to my name and any of these commands, plus many more: #{JSON.parse(File.read('configs/responses.json'))['commands'].sample}"
             when /\A!time/i then
                 send_message "The current time in Melbourne, Australia is #{Time.now.getlocal("+11:00").strftime('%I:%M %p')}"
             when /(\A!!|\S.*!!)\Z/ then
@@ -228,7 +228,7 @@ client = Twitch::Chat::Client.new(channel: configs["channel"], nickname: configs
                  else
                     if message =~ /\A!.*/
                         commands[message] = "That feature has not yet been implemented."
-                        File.open("commands.json", "w") do |f|
+                        File.open("configs/commands.json", "w") do |f|
                             f.write(JSON.pretty_generate(commands))
                         end
                         send_message commands[message]
