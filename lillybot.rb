@@ -186,6 +186,8 @@ client = Twitch::Chat::Client.new(channel: configs["channel"], nickname: configs
                 else
                     send_message "*blushes*"
                 end
+            when /\A!meme/i then
+                send_message JSON.parse(File.read('configs/responses.json'))['meme'].sample
             when /\A!.*slots/i then
                 play_slots(user, message)
             when /\A!chance/i then

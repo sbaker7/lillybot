@@ -48,6 +48,7 @@ Some of these commands will also accept variants.
 |!punch | Punch Lilly or someone else in chat |
 |!attack | Attack Lilly or someone else in the chat |
 |!spambot | Lilly reluctantly becomes a sellout |
+|!meme | Get a random meme |
 |!! | Lilly also gets excited |
 |!* | If a command isn't implemented yet, Lilly will make a note of it for addition later! |
 
@@ -92,5 +93,4 @@ Most of these responses use [regular expressions](http://www.tutorialspoint.com/
 |!JapanBot| Lilly starts speaking Japanese |
 |!test | This just checks if you're a moderator |
 |!settings | Find out which settings are on |
-|!meme | Get a random meme |
 |!lillybot | Turns Lilly on and off |
