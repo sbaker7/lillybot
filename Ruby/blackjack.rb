@@ -1,4 +1,3 @@
-require_relative "./lib/twitch/chat"
 require_relative "card"
 require_relative "player"
 require_relative "deck"
@@ -11,6 +10,11 @@ class BlackJackGame
         @deck = Deck.new()
         @players = []
         @stillplaying = 0
+        @finished = false
+    end
+
+    def is_finished
+        @finished
     end
 
     def get_remaining
@@ -24,8 +28,7 @@ class BlackJackGame
         while (me.get_total < 18)
             me.draw(@deck.draw)
         end
-        messages << "I drew #{me.get_hand}, giving me a total of #{me.get_total}. Let's see who won!"
-
+        messages << "I drew #{me.print_hand}giving me a total of #{me.get_total}. Let's see who won!"
 
         if me.get_total == 21
             messages << "I win! Try again next time, everyone!"
@@ -36,14 +39,14 @@ class BlackJackGame
             else
                 eligibleplayers = @players.find{|a| a.get_state == "s"}
                 if eligibleplayers != nil
-                    highscore = eligibleplayers.sort_by{|a| a.get_total} if eligibleplayers.kind_of?(Array)
+                    highscore = eligibleplayers.max_by{|a| a.get_total} if eligibleplayers.kind_of?(Array)
                     highscore = eligibleplayers.get_total if eligibleplayers.kind_of?(Player)
                     puts "The highscore is #{highscore}"
                     winners = @players.find{|a| a.get_total == highscore}
                     if me.get_total > 21 || (highscore > me.get_total && me.get_total < 21)
                         messages << "The winners are: #{winners} with a score of #{highscore}. Congratulations!"
                     else
-                        messages << "I guess I am the winner, with a score of #{me.get_total}! Better luck next time, guys!"
+                        messages << "I guess I am the winner with a score of #{me.get_total}! Better luck next time, guys!"
                     end
                 else
                     messages << "We've all busted, so I guess no one wins this round." if me.get_total > 21
@@ -51,6 +54,7 @@ class BlackJackGame
                 end
             end
         end
+        @finished = true
         messages
     end
 

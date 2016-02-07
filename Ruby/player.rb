@@ -41,4 +41,12 @@ class Player
     def to_s
         @user.to_s
     end
+
+    def print_hand
+        hand = ""
+        @hand.each do |card|
+            hand << "#{card}, "
+        end
+        hand
+    end
 end

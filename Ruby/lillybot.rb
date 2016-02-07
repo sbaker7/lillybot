@@ -33,13 +33,13 @@ end
 def spam_bot(user, spam = true)
     if user == "astrious" || user == "dragnflier"
         if spam
-            $scheduler = Rufus::Scheduler.new
-            $job = $scheduler.every '1m', first_in: '0s' do
+            @scheduler = Rufus::Scheduler.new
+            @job = @scheduler.every '1m', first_in: '0s' do
                 send_message "Go Astrious, go! Make sure to follow Astrious on twitter, @Astriousruns. You can play games and talk to me too! Try !commands"
             end
         else
             send_message "I can stop now? Being a sell out is tiring work..."
-            $scheduler.unschedule($job)
+            @scheduler.unschedule(@job)
         end
     end
 end
@@ -98,8 +98,8 @@ def play_chance(user)
 end
 
 def guessing_game
-    if $guessing_value == nil
-        $guessing_value = rand(50) +1
+    if @guessing_value == nil
+        @guessing_value = rand(50) +1
         send_message "I've started a guessing game! Try guess the number between 1 and 50 using !guess"
     else
         send_message "A guessing game has already been started. Try guess the number between 1 and 50 using !guess"
@@ -107,11 +107,11 @@ def guessing_game
 end
 
 def make_guess(user, guess)
-    if guess.to_i == $guessing_value
+    if guess.to_i == @guessing_value
         send_message "Congratulations #{user}, you got it!"
-        $guessing_value = nil
+        @guessing_value = nil
     else
-        if guess.to_i < $guessing_value
+        if guess.to_i < @guessing_value
             send_message "Higher, #{user}."
         else
             send_message "Lower, #{user}."
@@ -127,11 +127,13 @@ def print_messages(messages)
     end
 end
 
-client = Twitch::Chat::Client.new(channel: 'dragnflier', nickname: 'dragnflier', password: 'oauth:r3q976rwwqira80pswjha1xs98me2p') do
+configs = JSON.parse(File.read("res/login.json"))
+
+client = Twitch::Chat::Client.new(channel: configs["channel"], nickname: configs["nickname"], password: configs["password"]) do
 
     commands = JSON.parse(File.read('commands.json'))
-    $guessing_value = nil
-    $blackjack_game = nil
+    @guessing_value = nil
+    @blackjack_game = nil
 
     on(:connect) do
         send_message 'Hi guys!'
@@ -170,7 +172,7 @@ client = Twitch::Chat::Client.new(channel: 'dragnflier', nickname: 'dragnflier',
             when /\A!commands/i then
                 send_message "I can respond to my name and any of these commands, plus many more: #{JSON.parse(File.read('responses.json'))['commands'].sample}"
             when /\A!time/i then
-                send_message "The current time in Melbourne, Australia is #{Time.now.strftime('%I:%M %p')}"
+                send_message "The current time in Melbourne, Australia is #{Time.now.getlocal("+11:00").strftime('%I:%M %p')}"
             when /(\A!!|\S.*!!)\Z/ then
                 send_message "#{message}!"
             when /\A!.*pat/i then
@@ -202,14 +204,23 @@ client = Twitch::Chat::Client.new(channel: 'dragnflier', nickname: 'dragnflier',
             when /\A!guess\s\d+/
                 make_guess(user, message.scan(/\d+/).first)
             when /\A!start21\Z/i then
-                $blackjack_game = BlackJackGame.new
-                send_message "I've started a new game of 21. Draw a card with !hit, or !stand if you think you're too close to 21"
+                if @blackjack_game == nil
+                    @blackjack_game = BlackJackGame.new
+                    send_message "I've started a new game of 21. Draw a card with !hit, or !stand if you think you're too close to 21"
+                else
+                    send_message "There's already a blackjack game started, #{user}. Why don't you try !hit"
+                end
             when /\A!hit\Z/i then
-                print_messages $blackjack_game.hit(user) if $blackjack_game != nil
+                print_messages @blackjack_game.hit(user) if @blackjack_game != nil
+                send_message "There isn't a blackjack game started, #{user}." if @blackjack_game == nil
+                @blackjack_game = nil if @blackjack_game != nil && @blackjack_game.is_finished
             when /\A!stand\Z/i then
-                print_messages $blackjack_game.stand(user) if $blackjack_game != nil
+                print_messages @blackjack_game.stand(user) if @blackjack_game != nil
+                send_message "There isn't a blackjack game started, #{user}." if @blackjack_game == nil
+                @blackjack_game = nil if @blackjack_game != nil && @blackjack_game.is_finished
             when /\A!endround\Z/i then
-                print_messages $blackjack_game.end_game if $blackjack_game != nil
+                print_messages @blackjack_game.finish if @blackjack_game != nil
+                @blackjack_game = nil if @blackjack_game != nil
             else
                  if commands.key?(message)
                      puts "Found it!"
