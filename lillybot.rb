@@ -2,6 +2,14 @@ require_relative './lib/twitch/chat'
 require_relative './blackjack/blackjack'
 require 'rufus-scheduler'
 require 'json'
+require 'cleverbot-api'
+
+def clever_lilly(message)
+        if $bot == nil
+            $bot = CleverBot.new
+        end
+        $bot.think message.downcase.sub!('lilly', '')
+end
 
 def say_hello(user, message)
     if user != "astrious" && user != "dragnflier" && user != "catbag"
@@ -130,7 +138,7 @@ end
 configs = JSON.parse(File.read("res/login.json"))
 
 client = Twitch::Chat::Client.new(channel: configs["channel"], nickname: configs["nickname"], password: configs["password"]) do
-
+    $bot = CleverBot.new
     commands = JSON.parse(File.read('configs/commands.json'))
     @guessing_value = nil
     @blackjack_game = nil
@@ -205,6 +213,8 @@ client = Twitch::Chat::Client.new(channel: configs["channel"], nickname: configs
                 end
             when /\A!spambot\Z/i then
                 send_message "Should I turn off or on? I'm not sure, #{user}"
+            when /\Ahappy birthday\s\w*/i then
+                send_message "#{message}!"
             when /\A!guessinggame/i then
                 guessing_game
             when /\A!guess\s\d+/
@@ -227,8 +237,10 @@ client = Twitch::Chat::Client.new(channel: configs["channel"], nickname: configs
             when /\A!endround\Z/i then
                 print_messages @blackjack_game.finish if @blackjack_game != nil
                 @blackjack_game = nil if @blackjack_game != nil
+            when /Lilly/i then
+                send_message clever_lilly(message)
             else
-                 if commands.key?(message)
+                 if commands.key?(message.downcase)
                      puts "Found it!"
                      send_message commands[message].gsub("user", user)
                  else
