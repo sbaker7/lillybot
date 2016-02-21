@@ -2,13 +2,13 @@ require_relative './lib/twitch/chat'
 require_relative './blackjack/blackjack'
 require 'rufus-scheduler'
 require 'json'
-require 'cleverbot-api'
+require 'cleverbot'
 
 def clever_lilly(message)
         if $bot == nil
-            $bot = CleverBot.new
+            $bot = Cleverbot.new($configs["clever_user"], $configs["clever_api_key"])
         end
-        $bot.think message.downcase.sub!('lilly', '')
+        send_message $bot.say(message.downcase.sub!('lilly', ''))
 end
 
 def say_hello(user, message)
@@ -135,10 +135,9 @@ def print_messages(messages)
     end
 end
 
-configs = JSON.parse(File.read("res/login.json"))
+$configs = JSON.parse(File.read("res/login.json"))
 
-client = Twitch::Chat::Client.new(channel: configs["channel"], nickname: configs["nickname"], password: configs["password"]) do
-    $bot = CleverBot.new
+client = Twitch::Chat::Client.new(channel: $configs["channel"], nickname: $configs["nickname"], password: $configs["password"]) do
     commands = JSON.parse(File.read('configs/commands.json'))
     @guessing_value = nil
     @blackjack_game = nil
@@ -238,7 +237,7 @@ client = Twitch::Chat::Client.new(channel: configs["channel"], nickname: configs
                 print_messages @blackjack_game.finish if @blackjack_game != nil
                 @blackjack_game = nil if @blackjack_game != nil
             when /Lilly/i then
-                send_message clever_lilly(message)
+                clever_lilly(message)
             else
                  if commands.key?(message.downcase)
                      puts "Found it!"

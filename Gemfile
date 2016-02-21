@@ -5,4 +5,4 @@ source "https://rubygems.org"
 gem 'eventmachine'
 gem 'activesupport'
 gem 'rufus-scheduler'
-gem 'cleverbot-api'
+gem 'cleverbot_io'
