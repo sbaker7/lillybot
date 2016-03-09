@@ -148,7 +148,7 @@ client = Twitch::Chat::Client.new(channel: $configs["channel"], nickname: $confi
 
     on(:message) do |user, message|
         case message
-        when /\Ah(i|ello|ey).*lilly/i then
+            when /\Ah(i|ello|ey).*lilly/i then
                 say_hello(user, message)
             when /MaiWaifu/ then
                 send_message "MaiWaifu"
@@ -156,30 +156,10 @@ client = Twitch::Chat::Client.new(channel: $configs["channel"], nickname: $confi
                 be_touched(user)
             when /\A!\S*(anal|cock|penis|pen15|vagina|pussy)\Z/i then
                 be_disgusted(user)
-            when /LillyBag/ then
-                send_message "CatBag + MaiWaifu = LillyBag"
-            when /CatBag/ then
-                send_message "CatBag <3"
-            when /\Athank.*\ALilly\Z/i then
-                send_message "You're welcome, #{user}"
-            when /how are you.*lilly/i then
-                send_message "I'm feeling good, #{user}. Thanks for asking"
-            when /right.*lilly/i then
-                send_message "I have no idea what you're talking about, #{user}"
-            when /lilly.*se(n|m)pai/i then
-                send_message "You can just call me Lilly, #{user}"
-            when /FrankerZ/ then
-                send_message "FrankerZ LilZ LilyZ <3"
-            when /LilyZ/ then
-                send_message "Isn't she cute? LilyZ <3"
-            when /Lily/ then
-                send_message "Do you mean LilyZ?"
             when /\A!quote/i then
                 send_message JSON.parse(File.read('configs/responses.json'))['quotes'].sample
             when /\A!commands/i then
                 send_message "I can respond to my name and any of these commands, plus many more: #{JSON.parse(File.read('configs/commands.json')).keys.sample(5).join(", ")}"
-            when /\A!time/i then
-                send_message "The current time in Melbourne, Australia is #{Time.now.getlocal("+11:00").strftime('%I:%M %p')}"
             when /(\A!!|\S.*!!)\Z/ then
                 send_message "#{message}!"
             when /\A!.*pat/i then
@@ -236,12 +216,17 @@ client = Twitch::Chat::Client.new(channel: $configs["channel"], nickname: $confi
             when /\A!endround\Z/i then
                 print_messages @blackjack_game.finish if @blackjack_game != nil
                 @blackjack_game = nil if @blackjack_game != nil
-            when /Lilly/i then
-                clever_lilly(message)
             else
-                 if commands.key?(message.downcase)
+                # check if message matches any keys as a regex object. Grab the first one.
+                valid_key = commands.keys.select { |key| message.to_s.match(Regexp.new(key, true)) }.first
+                 if valid_key
                      puts "Found it!"
-                     send_message commands[message].gsub("user", user)
+                     begin
+                         send_message eval(commands[valid_key])
+                     rescue => ex
+                         send_message commands[valid_key].gsub("user", user)
+                     end
+
                  else
                     if message =~ /\A!.*/
                         commands[message] = "That feature has not yet been implemented."
