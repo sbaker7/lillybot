@@ -7,12 +7,15 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
+    cleverbot_io (1.0.0)
+      httpclient (= 2.7.1)
     eventmachine (1.0.9.1)
+    httpclient (2.7.1)
     i18n (0.7.0)
     json (1.8.3)
     minitest (5.8.4)
+    rufus-scheduler (3.2.0)
     thread_safe (0.3.5)
-    twitch-chat (0.0.1)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
 
@@ -21,8 +24,9 @@ PLATFORMS
 
 DEPENDENCIES
   activesupport
+  cleverbot_io
   eventmachine
-  twitch-chat
+  rufus-scheduler
 
 BUNDLED WITH
    1.11.2

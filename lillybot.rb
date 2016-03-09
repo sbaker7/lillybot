@@ -23,19 +23,29 @@ def say_hello(user, message)
     end
 end
 
-def be_touched(user)
+def be_touched(user, response, timeout = false)
     if user != "astrious" && user != "dragnflier"
-        send_message ".timeout #{user} 1"
-        send_message "Don't touch me there!"
+        send_message ".timeout #{user} 1" if timeout
+        send_message response
     else
         send_message "*blushes*" if user == "astrious"
         send_message "That's for later, #{user} <3" if user == "dragnflier"
     end
 end
 
-def be_disgusted(user)
-    send_message ".timeout #{user} 1"
-    send_message "You're disgusting..."
+def be_timed_out(user, response, time)
+    send_message ".timeout #{user} #{time}"
+    send_message response
+end
+
+def toggle_spambot
+    if user == "astrious" || user == "dragnflier"
+        if message =~ /on/i
+            spam_bot(user)
+        else
+            spam_bot(user, false)
+        end
+    end
 end
 
 def spam_bot(user, spam = true)
@@ -127,6 +137,35 @@ def make_guess(user, guess)
     end
 end
 
+def start_21
+    if @blackjack_game == nil
+        @blackjack_game = BlackJackGame.new
+        send_message "I've started a new game of 21. Draw a card with !hit, or !stand if you think you're too close to 21"
+    else
+        send_message "There's already a blackjack game started, #{user}. Why don't you try !hit"
+    end
+end
+
+def hit_21(user)
+    if @blackjack_game != nil
+        print_messages @blackjack_game.hit(user)
+        @blackjack_game = nil if @blackjack_game.is_finished
+    else
+        send_message "There isn't a blackjack game started, #{user}." if @blackjack_game == nil
+    end
+end
+
+def stand_21(user)
+    print_messages @blackjack_game.stand(user) if @blackjack_game != nil
+    send_message "There isn't a blackjack game started, #{user}." if @blackjack_game == nil
+    @blackjack_game = nil if @blackjack_game != nil && @blackjack_game.is_finished
+end
+
+def end_21(user)
+    print_messages @blackjack_game.finish if @blackjack_game != nil
+    @blackjack_game = nil if @blackjack_game != nil
+end
+
 def print_messages(messages)
     if messages != nil
         messages.reverse.each do |message|
@@ -139,6 +178,7 @@ $configs = JSON.parse(File.read("res/login.json"))
 
 client = Twitch::Chat::Client.new(channel: $configs["channel"], nickname: $configs["nickname"], password: $configs["password"]) do
     commands = JSON.parse(File.read('configs/commands.json'))
+    new_commands = JSON.parse(File.read('configs/new_commands.json'))
     @guessing_value = nil
     @blackjack_game = nil
 
@@ -147,97 +187,26 @@ client = Twitch::Chat::Client.new(channel: $configs["channel"], nickname: $confi
     end
 
     on(:message) do |user, message|
-        case message
-            when /\Ah(i|ello|ey).*lilly/i then
-                say_hello(user, message)
-            when /MaiWaifu/ then
-                send_message "MaiWaifu"
-            when /\A!\S*touch\Z/i then
-                be_touched(user)
-            when /\A!\S*(anal|cock|penis|pen15|vagina|pussy)\Z/i then
-                be_disgusted(user)
-            when /\A!quote/i then
-                send_message JSON.parse(File.read('configs/responses.json'))['quotes'].sample
-            when /\A!commands/i then
-                send_message "I can respond to my name and any of these commands, plus many more: #{JSON.parse(File.read('configs/commands.json')).keys.sample(5).join(", ")}"
-            when /(\A!!|\S.*!!)\Z/ then
-                send_message "#{message}!"
-            when /\A!.*pat/i then
-                send_message "*scrunches face at #{user}*"
-            when /\A!.*poke/i then
-                send_message "Don't do that!"
-                send_message ".timeout #{user} 1"
-            when /\A!.*kiss/i then
-                unless user == "astrious" || user == "dragnflier"
-                    send_message "I don't think Astrious appreciates that, #{user}"
-                else
-                    send_message "*blushes*"
+        valid_key = commands.keys.select { |key| message.to_s.match(Regexp.new(key, true)) }.first
+         if valid_key
+             puts "Found it!"
+             begin
+                 eval(commands[valid_key])
+             rescue SyntaxError => ex
+                 send_message eval("\"#{commands[valid_key]}\"")
+             rescue NoMethodError => ex
+                 send_message eval("\"#{commands[valid_key]}\"")
+             end
+         else
+            if message =~ /\A!.*/
+                new_commands[message] = "That feature has not yet been implemented."
+                File.open("configs/new_commands.json", "w") do |f|
+                    f.write(JSON.pretty_generate(new_commands))
                 end
-            when /\A!meme/i then
-                send_message JSON.parse(File.read('configs/responses.json'))['meme'].sample
-            when /\A!.*slots/i then
-                play_slots(user, message)
-            when /\A!chance/i then
-                play_chance(user)
-            when /\A!.*(punch|attack)/ then
-                send_message "We don't accept violence here"
-                send_message ".timeout #{user} 1"
-            when /\A!spambot\s(on|off)\Z/i then
-                if user == "astrious" || user == "dragnflier"
-                    if message =~ /on/i
-                        spam_bot(user)
-                    else
-                        spam_bot(user, false)
-                    end
-                end
-            when /\A!spambot\Z/i then
-                send_message "Should I turn off or on? I'm not sure, #{user}"
-            when /\Ahappy birthday\s\w*/i then
-                send_message "#{message}!"
-            when /\A!guessinggame/i then
-                guessing_game
-            when /\A!guess\s\d+/
-                make_guess(user, message.scan(/\d+/).first)
-            when /\A!start21\Z/i then
-                if @blackjack_game == nil
-                    @blackjack_game = BlackJackGame.new
-                    send_message "I've started a new game of 21. Draw a card with !hit, or !stand if you think you're too close to 21"
-                else
-                    send_message "There's already a blackjack game started, #{user}. Why don't you try !hit"
-                end
-            when /\A!hit\Z/i then
-                print_messages @blackjack_game.hit(user) if @blackjack_game != nil
-                send_message "There isn't a blackjack game started, #{user}." if @blackjack_game == nil
-                @blackjack_game = nil if @blackjack_game != nil && @blackjack_game.is_finished
-            when /\A!stand\Z/i then
-                print_messages @blackjack_game.stand(user) if @blackjack_game != nil
-                send_message "There isn't a blackjack game started, #{user}." if @blackjack_game == nil
-                @blackjack_game = nil if @blackjack_game != nil && @blackjack_game.is_finished
-            when /\A!endround\Z/i then
-                print_messages @blackjack_game.finish if @blackjack_game != nil
-                @blackjack_game = nil if @blackjack_game != nil
-            else
-                # check if message matches any keys as a regex object. Grab the first one.
-                valid_key = commands.keys.select { |key| message.to_s.match(Regexp.new(key, true)) }.first
-                 if valid_key
-                     puts "Found it!"
-                     begin
-                         send_message eval(commands[valid_key])
-                     rescue => ex
-                         send_message commands[valid_key].gsub("user", user)
-                     end
-
-                 else
-                    if message =~ /\A!.*/
-                        commands[message] = "That feature has not yet been implemented."
-                        File.open("configs/commands.json", "w") do |f|
-                            f.write(JSON.pretty_generate(commands))
-                        end
-                        send_message commands[message]
-                    end
-                end
+                send_message new_commands[message]
             end
         end
     end
+end
 
 client.run!

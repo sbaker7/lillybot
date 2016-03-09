@@ -1,6 +1,7 @@
 require 'json'
 
 testdata = JSON.parse(File.read('configs/commands.json'))
+user = "dragn"
 
 def print_val(message)
     "it worked! your message was: " + message
@@ -13,9 +14,9 @@ loop {
         begin
             puts eval(testdata[valid_keys])
         rescue SyntaxError => ex
-            puts testdata[valid_keys]
-        rescue => ex
-            puts String.interpolate(testdata[valid_keys])
+            puts eval("\"#{testdata[valid_keys]}\"")
+        rescue NoMethodError => ex
+            puts eval("\"#{testdata[valid_keys]}\"")
         end
     else
         puts "I couldn't find that key"
