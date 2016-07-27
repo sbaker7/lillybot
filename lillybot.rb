@@ -201,7 +201,7 @@ client = Twitch::Chat::Client.new(channel: $configs["channel"], nickname: $confi
             responses << Plugin::Manager.notify(:message, message)
         end
 
-        responses.flatten!.each { |r| send_message r }
+        responses.flatten!.reverse.each { |r| send_message r }
     end
 end
 
