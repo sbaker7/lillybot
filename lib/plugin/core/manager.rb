@@ -15,14 +15,19 @@ module Plugin
 
     def self.load_plugins(plugin_dir)
       Loader.call(plugin_dir)
-      notify(:start)
+      notify(:system_start)
+    end
+
+    def self.notify_shutdown
+      notify(:system_stop)
     end
 
     def self.notify(event, *args)
+      responses = []
       @plugins.select { |p| p.accepts?(event) }.each do |p|
-        notify_plugin(p, event, *args)
+        responses << notify_plugin(p, event, *args)
       end
-      true
+      responses
     end
 
   private
@@ -53,7 +58,11 @@ module Plugin
     end
 
     def notify(event, *args)
-      (@callbacks[event.to_sym] || []).each { |blk| blk.call(*args) }
+      responses = []
+      (@callbacks[event.to_sym] || []).each { |blk|
+        responses << blk.call(*args)
+      }
+      responses
     end
 
     def accepts?(event)

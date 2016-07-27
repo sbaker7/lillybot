@@ -1,5 +1,6 @@
-require_relative './lib/twitch/chat'
-require_relative './blackjack/blackjack'
+require_relative 'lib/twitch/chat'
+require_relative 'blackjack/blackjack'
+require_relative 'lib/plugin/plugin'
 require 'rufus-scheduler'
 require 'json'
 require 'cleverbot'
@@ -174,6 +175,8 @@ def print_messages(messages)
     end
 end
 
+Plugin::Manager.load_plugins __dir__
+
 $configs = JSON.parse(File.read("res/login.json"))
 
 client = Twitch::Chat::Client.new(channel: $configs["channel"], nickname: $configs["nickname"], password: $configs["password"]) do
@@ -187,25 +190,18 @@ client = Twitch::Chat::Client.new(channel: $configs["channel"], nickname: $confi
     end
 
     on(:message) do |user, message|
-        valid_key = commands.keys.select { |key| message.to_s.match(Regexp.new(key, true)) }.first
-         if valid_key
-             puts "Found it!"
-             begin
-                 eval(commands[valid_key])
-             rescue SyntaxError => ex
-                 send_message eval("\"#{commands[valid_key]}\"")
-             rescue NoMethodError => ex
-                 send_message eval("\"#{commands[valid_key]}\"")
-             end
-         else
-            if message =~ /\A!.*/
-                new_commands[message] = "That feature has not yet been implemented."
-                File.open("configs/new_commands.json", "w") do |f|
-                    f.write(JSON.pretty_generate(new_commands))
-                end
-                send_message new_commands[message]
-            end
+        responses = []
+
+        # check if the message is a command
+        if message.start_with? '!'
+            # split the command so it can go out as an event
+            parts = /\A!?+(?<command>\w+) ?+(?<args>.*)/.match(message)
+            responses << Plugin::Manager.notify(parts[:command], parts[:args])
+        else
+            responses << Plugin::Manager.notify(:message, message)
         end
+
+        responses.flatten!.each { |r| send_message r }
     end
 end
 
