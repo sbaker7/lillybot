@@ -11,6 +11,9 @@ Plugin::Manager.notify(:start)
 
 # dispatching events with args
 Plugin::Manager.notify(:chat, 'ruby', 'hello world!')
+
+# events can also be strings, this will be converted to a symbol
+Plugin::Manager.notify('123lookatme')
 ```
 
 ### Plugin example
@@ -30,6 +33,11 @@ Plugin::Manager.define 'Echo' do
   # events can have aliases
   on(:stop, :halt) do
     puts 'ECHOPLUGIN: plugin being stopped'
+  end
+
+  # events can have numbers at the start
+  on('123lookatme'.to_sym) do
+    puts 'ECHOPLUGIN: ruby is awesome'
   end
 
 end
