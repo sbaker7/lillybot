@@ -56,7 +56,6 @@ Some of these commands will also accept variants.
 
 | Command | Function |
 | ------- | -------- |
-|!slots | Play slots with Lilly! |
 |!catslots |Play slots with Lilly using CatBag emotes |
 |!dogslots | Play slots with Lilly using dog emotes |
 |!chance | Play a game of chance. Don't get 3! |

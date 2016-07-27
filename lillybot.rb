@@ -62,48 +62,6 @@ def spam_bot(user, spam = true)
     end
 end
 
-def play_slots(user, message)
-    file = File.read("configs/responses.json")
-    responses = JSON.parse(file)
-    faces = nil
-    if message =~ /cat/i
-        faces = responses["catslots"]
-    else
-        if message =~ /dog/i
-            faces = responses["dogslots"]
-        else
-            faces = responses["slots"]
-        end
-    end
-
-    face1 = faces.sample
-    face2 = faces.sample
-    face3 = faces.sample
-
-    if face1 == face2 && face2 == face3
-        if face1 == 'Kappa'
-            send_message "Oh dear. Bad luck, #{user}!"
-            send_message ".timeout #{user} 60"
-        else
-            if face1 =='AssFace'
-                send_message "What a cutie! <3"
-            else
-                if face1 == 'FrankerZ' || face1 == 'LilZ'
-                    send_message "I love dogs!"
-            end
-        end
-        send_message "Congratulations!"
-    end
-    else
-        if (face1 == face2) || (face1 == face3) || (face2 == face3)
-            send_message "So close!"
-        else
-            send_message "Better luck next time!"
-        end
-    end
-    send_message "You rolled: #{face1} #{face2} #{face3}"
-end
-
 def play_chance(user)
     result = rand(5) + 1
     if result == 3

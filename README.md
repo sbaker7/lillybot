@@ -71,7 +71,9 @@ Here's a quick list of example commands to get you started. You can play around 
 
 ###Complete List (With Todos)
 
-A complete list of the commands available for Lillybot and upcoming commands can be found [here](todolist.md)
+Commands for each plugin can be found on the respective plugin's README file. See the [plugins folder](plugins) folder for bundled plugins.
+
+Upcoming commands can be found [here](todolist.md)
 
 ---
 

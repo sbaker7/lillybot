@@ -14,7 +14,6 @@
 
   "\\A!guessinggame" : "guessing_game",
   "\\A!guess\\s\\d+" : "make_guess(user, message.scan(/\\d+/).first)",
-  "\\A!.*slots" : "play_slots(user, message)",
   "\\A!chance" : "play_chance(user)",
   "\\A!spambot\\s(on|off)\\Z" : "toggle_spambot(user, message)",
   "\\A!spambot\\Z" : "Should I turn off or on? I'm not sure, #{user}",
