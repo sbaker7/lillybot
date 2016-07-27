@@ -7,29 +7,29 @@
 Plugin::Manager.load_plugins __dir__
 
 # dispatching events
-Plugin::Manager.notify :system_launched
+Plugin::Manager.notify(:start)
 
 # dispatching events with args
-Plugin::Manager.notify :chat, 'ruby', 'hello world!'
+Plugin::Manager.notify(:chat, 'ruby', 'hello world!')
 ```
 
 ### Plugin example
 
 ```ruby
-class EchoPlugin < Plugin::Base
+Plugin::Manager.define 'Echo' do
 
-  # NOTE: plugins cannot have initialize methods
-
-  def start
-    puts 'ECHO: plugin has been started'
+  on(:start) do
+    puts 'ECHOPLUGIN: plugin has been started'
   end
 
-  def chat(user, message)
-    puts "ECHO: received chat from '#{user}' saying: '#{message}'"
+  # events can accept arguments
+  on(:chat) do |user, message|
+    puts "ECHOPLUGIN: received chat from '#{user}' saying: '#{message}'"
   end
 
-  def stop
-    puts 'ECHO: plugin being stopped'
+  # events can have aliases
+  on(:stop, :halt) do
+    puts 'ECHOPLUGIN: plugin being stopped'
   end
 
 end

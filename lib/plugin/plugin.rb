@@ -1,4 +1,3 @@
-require_relative 'core/base'
 require_relative 'core/loader'
 require_relative 'core/manager'
 
