@@ -2,7 +2,7 @@ require_relative "card"
 require_relative "player"
 require_relative "deck"
 
-class BlackJackGame
+class BlackJack
 
     def initialize
         messages = []

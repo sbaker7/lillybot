@@ -12,12 +12,6 @@
   "MaiWaifu": "MaiWaifu",
   "Lilly": "clever_lilly(message)",
 
-
-  "\\A!21rules": "To play 21, ask a moderator to start a 21 game. The aim of the game is to randomly draw cards and get as close as you can to 21. The closest to 21 wins the game. Make sure you get a closer score than I do, or I win. !hit will give you another card, and !stand will signify you don't want any more cards. When everybody's either standing or busted, it'll be my turn!",
-  "\\A!start21\\Z" : "start_21",
-  "\\A!hit\\Z" : "hit_21(user)",
-  "\\A!stand\\Z" : "stand_21(user)",
-  "\\A!endround\\Z" : "end_21(user)",
   "\\A!guessinggame" : "guessing_game",
   "\\A!guess\\s\\d+" : "make_guess(user, message.scan(/\\d+/).first)",
   "\\A!.*slots" : "play_slots(user, message)",

@@ -1,5 +1,4 @@
 require_relative 'lib/twitch/chat'
-require_relative 'blackjack/blackjack'
 require_relative 'lib/plugin/plugin'
 require 'rufus-scheduler'
 require 'json'
@@ -138,43 +137,6 @@ def make_guess(user, guess)
     end
 end
 
-def start_21
-    if @blackjack_game == nil
-        @blackjack_game = BlackJackGame.new
-        send_message "I've started a new game of 21. Draw a card with !hit, or !stand if you think you're too close to 21"
-    else
-        send_message "There's already a blackjack game started, #{user}. Why don't you try !hit"
-    end
-end
-
-def hit_21(user)
-    if @blackjack_game != nil
-        print_messages @blackjack_game.hit(user)
-        @blackjack_game = nil if @blackjack_game.is_finished
-    else
-        send_message "There isn't a blackjack game started, #{user}." if @blackjack_game == nil
-    end
-end
-
-def stand_21(user)
-    print_messages @blackjack_game.stand(user) if @blackjack_game != nil
-    send_message "There isn't a blackjack game started, #{user}." if @blackjack_game == nil
-    @blackjack_game = nil if @blackjack_game != nil && @blackjack_game.is_finished
-end
-
-def end_21(user)
-    print_messages @blackjack_game.finish if @blackjack_game != nil
-    @blackjack_game = nil if @blackjack_game != nil
-end
-
-def print_messages(messages)
-    if messages != nil
-        messages.reverse.each do |message|
-            send_message message.to_s.gsub("[", "").gsub("]", "")
-        end
-    end
-end
-
 Plugin::Manager.load_plugins __dir__
 
 $configs = JSON.parse(File.read("res/login.json"))
@@ -196,9 +158,9 @@ client = Twitch::Chat::Client.new(channel: $configs["channel"], nickname: $confi
         if message.start_with? '!'
             # split the command so it can go out as an event
             parts = /\A!?+(?<command>\w+) ?+(?<args>.*)/.match(message)
-            responses << Plugin::Manager.notify(parts[:command], parts[:args])
+            responses << Plugin::Manager.notify(parts[:command], user, parts[:args])
         else
-            responses << Plugin::Manager.notify(:message, message)
+            responses << Plugin::Manager.notify(:message, user, message)
         end
 
         responses.flatten!.reverse.each { |r| send_message r }
