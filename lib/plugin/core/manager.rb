@@ -2,10 +2,14 @@ module Plugin
   class Manager
 
     def self.define(name, &blk)
+      name = name.to_sym
+
+      raise "Plugin #{name} must define a block" unless block_given?
+      raise "Plugin #{name} already defined" if @plugins.any? { |e| e.name == name }
 
       # create plugin object
       p = Plugin.new
-      p.name = name.to_sym
+      p.name = name
 
       # load the supplied block
       p.instance_eval(&blk)
@@ -37,7 +41,7 @@ module Plugin
     def self.notify_plugin(plugin, event, *args)
       plugin.notify(event, *args)
     rescue Exception => e
-      puts "ERROR -: #{e.message}"
+      Log.error "#{e.message}"
     end
 
   end

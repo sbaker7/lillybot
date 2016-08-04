@@ -1,3 +1,4 @@
+require_relative 'lib/log'
 require_relative 'lib/twitch/chat'
 require_relative 'lib/plugin/plugin'
 require 'rufus-scheduler'
