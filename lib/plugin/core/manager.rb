@@ -1,8 +1,14 @@
 module Plugin
   class Manager
 
-    def self.define(name, &blk)
+    def initialize(loader = SimpleLoader.new)
+      @loader = loader
+      @plugins = []
+    end
+
+    def define(name, &blk)
       name = name.to_sym
+      Lilly.log.debug "Defining plugin #{name.inspect}"
 
       raise "Plugin #{name} must define a block" unless block_given?
       raise "Plugin #{name} already defined" if @plugins.any? { |e| e.name == name }
@@ -17,31 +23,38 @@ module Plugin
       @plugins << p
     end
 
-    def self.load_plugins(plugin_dir)
-      Loader.call(plugin_dir)
+    def load_plugins(plugin_dir)
+      @loader.call(plugin_dir)
       notify(:system_start)
     end
 
-    def self.notify_shutdown
+    def notify_shutdown
       notify(:system_stop)
     end
 
-    def self.notify(event, *args)
+    def notify(event, *args)
       responses = []
       @plugins.select { |p| p.accepts?(event) }.each do |p|
-        responses << notify_plugin(p, event, *args)
+        responses << notify_plugin_internal(p, event, *args)
+      end
+      responses
+    end
+
+    def notify_plugin(plugin, event, *args)
+      responses = []
+      name = plugin.to_sym
+      @plugins.select { |p| p.name == name }.each do |p|
+        responses << notify_plugin_internal(p, event, *args)
       end
       responses
     end
 
   private
 
-    @plugins = []
-
-    def self.notify_plugin(plugin, event, *args)
+    def notify_plugin_internal(plugin, event, *args)
       plugin.notify(event, *args)
     rescue Exception => e
-      Log.error "#{e.message}"
+      Lilly.log.error "Error notifying #{plugin.name}: #{e.message}"
     end
 
   end
@@ -50,7 +63,7 @@ module Plugin
 
     attr_accessor :name
 
-    # should not be called directly, use PlugMan.define instead.
+    # should not be called directly, use the manager's define method instead.
     def initialize()
       @callbacks = {}
     end

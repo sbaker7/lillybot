@@ -1,6 +1,6 @@
-require_relative 'lib/log'
 require_relative 'lib/twitch/chat'
 require_relative 'lib/plugin/plugin'
+require_relative 'lib/lilly/lilly'
 require 'rufus-scheduler'
 require 'json'
 require 'cleverbot'
@@ -96,7 +96,7 @@ def make_guess(user, guess)
     end
 end
 
-Plugin::Manager.load_plugins __dir__
+Lilly.plugin.load_plugins __dir__
 
 $configs = JSON.parse(File.read("res/login.json"))
 

@@ -1,6 +1,6 @@
 require_relative 'core/blackjack'
 
-Plugin::Manager.define 'Blackjack' do
+Lilly.plugin.define 'Blackjack' do
 
   on(:system_start) do
     # do nothing?
