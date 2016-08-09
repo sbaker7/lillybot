@@ -117,9 +117,9 @@ client = Twitch::Chat::Client.new(channel: $configs["channel"], nickname: $confi
         if message.start_with? '!'
             # split the command so it can go out as an event
             parts = /\A!?+(?<command>\w+) ?+(?<args>.*)/.match(message)
-            responses << Plugin::Manager.notify(parts[:command], user, parts[:args])
+            responses << Lilly.plugin.notify(parts[:command], user, parts[:args])
         else
-            responses << Plugin::Manager.notify(:message, user, message)
+            responses << Lilly.plugin.notify(:message, user, message)
         end
 
         responses.flatten!.reverse.each { |r| send_message r }
