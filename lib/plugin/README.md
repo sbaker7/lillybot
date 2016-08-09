@@ -3,23 +3,28 @@
 ### Manager example
 
 ```ruby
+# create plugin manager
+manager = Plugin::Manager.new
+
 # load plugins
-Plugin::Manager.load_plugins __dir__
+manager.load_plugins __dir__
 
 # dispatching events
-Plugin::Manager.notify(:start)
+manager.notify(:start)
 
 # dispatching events with args
-Plugin::Manager.notify(:chat, 'ruby', 'hello world!')
+manager.notify(:chat, 'ruby', 'hello world!')
 
 # events can also be strings, this will be converted to a symbol
-Plugin::Manager.notify('123lookatme')
+manager.notify('123lookatme')
 ```
+
+**Note:** Instances of the plugin manager will need to be accessible statically/globally so that plugins may be defined.
 
 ### Plugin example
 
 ```ruby
-Plugin::Manager.define 'Echo' do
+manager.define 'Echo' do
 
   on(:start) do
     puts 'ECHOPLUGIN: plugin has been started'
