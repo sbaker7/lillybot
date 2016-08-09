@@ -56,16 +56,10 @@ Some of these commands will also accept variants.
 
 | Command | Function |
 | ------- | -------- |
-|!slots | Play slots with Lilly! |
 |!catslots |Play slots with Lilly using CatBag emotes |
 |!dogslots | Play slots with Lilly using dog emotes |
 |!chance | Play a game of chance. Don't get 3! |
 |!guessinggame | Guess the number! |
-|!21rules | Learn the rules of 21 |
-|!start21 | Start a 21 game |
-|!hit | Get another number |
-|!stand | Choose to wait |
-|!endround | Finish the 21 game |
 
 
 ##Responsive phrases

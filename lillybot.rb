@@ -1,5 +1,6 @@
-require_relative './lib/twitch/chat'
-require_relative './blackjack/blackjack'
+require_relative 'lib/twitch/chat'
+require_relative 'lib/plugin/plugin'
+require_relative 'lib/lilly/lilly'
 require 'rufus-scheduler'
 require 'json'
 require 'cleverbot'
@@ -62,48 +63,6 @@ def spam_bot(user, spam = true)
     end
 end
 
-def play_slots(user, message)
-    file = File.read("configs/responses.json")
-    responses = JSON.parse(file)
-    faces = nil
-    if message =~ /cat/i
-        faces = responses["catslots"]
-    else
-        if message =~ /dog/i
-            faces = responses["dogslots"]
-        else
-            faces = responses["slots"]
-        end
-    end
-
-    face1 = faces.sample
-    face2 = faces.sample
-    face3 = faces.sample
-
-    if face1 == face2 && face2 == face3
-        if face1 == 'Kappa'
-            send_message "Oh dear. Bad luck, #{user}!"
-            send_message ".timeout #{user} 60"
-        else
-            if face1 =='AssFace'
-                send_message "What a cutie! <3"
-            else
-                if face1 == 'FrankerZ' || face1 == 'LilZ'
-                    send_message "I love dogs!"
-            end
-        end
-        send_message "Congratulations!"
-    end
-    else
-        if (face1 == face2) || (face1 == face3) || (face2 == face3)
-            send_message "So close!"
-        else
-            send_message "Better luck next time!"
-        end
-    end
-    send_message "You rolled: #{face1} #{face2} #{face3}"
-end
-
 def play_chance(user)
     result = rand(5) + 1
     if result == 3
@@ -137,42 +96,7 @@ def make_guess(user, guess)
     end
 end
 
-def start_21
-    if @blackjack_game == nil
-        @blackjack_game = BlackJackGame.new
-        send_message "I've started a new game of 21. Draw a card with !hit, or !stand if you think you're too close to 21"
-    else
-        send_message "There's already a blackjack game started, #{user}. Why don't you try !hit"
-    end
-end
-
-def hit_21(user)
-    if @blackjack_game != nil
-        print_messages @blackjack_game.hit(user)
-        @blackjack_game = nil if @blackjack_game.is_finished
-    else
-        send_message "There isn't a blackjack game started, #{user}." if @blackjack_game == nil
-    end
-end
-
-def stand_21(user)
-    print_messages @blackjack_game.stand(user) if @blackjack_game != nil
-    send_message "There isn't a blackjack game started, #{user}." if @blackjack_game == nil
-    @blackjack_game = nil if @blackjack_game != nil && @blackjack_game.is_finished
-end
-
-def end_21(user)
-    print_messages @blackjack_game.finish if @blackjack_game != nil
-    @blackjack_game = nil if @blackjack_game != nil
-end
-
-def print_messages(messages)
-    if messages != nil
-        messages.reverse.each do |message|
-            send_message message.to_s.gsub("[", "").gsub("]", "")
-        end
-    end
-end
+Lilly.plugin.load_plugins __dir__
 
 $configs = JSON.parse(File.read("res/login.json"))
 
@@ -187,25 +111,18 @@ client = Twitch::Chat::Client.new(channel: $configs["channel"], nickname: $confi
     end
 
     on(:message) do |user, message|
-        valid_key = commands.keys.select { |key| message.to_s.match(Regexp.new(key, true)) }.first
-         if valid_key
-             puts "Found it!"
-             begin
-                 eval(commands[valid_key])
-             rescue SyntaxError => ex
-                 send_message eval("\"#{commands[valid_key]}\"")
-             rescue NoMethodError => ex
-                 send_message eval("\"#{commands[valid_key]}\"")
-             end
-         else
-            if message =~ /\A!.*/
-                new_commands[message] = "That feature has not yet been implemented."
-                File.open("configs/new_commands.json", "w") do |f|
-                    f.write(JSON.pretty_generate(new_commands))
-                end
-                send_message new_commands[message]
-            end
+        responses = []
+
+        # check if the message is a command
+        if message.start_with? '!'
+            # split the command so it can go out as an event
+            parts = /\A!?+(?<command>\w+) ?+(?<args>.*)/.match(message)
+            responses << Plugin::Manager.notify(parts[:command], user, parts[:args])
+        else
+            responses << Plugin::Manager.notify(:message, user, message)
         end
+
+        responses.flatten!.reverse.each { |r| send_message r }
     end
 end
 
