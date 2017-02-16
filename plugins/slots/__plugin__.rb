@@ -24,7 +24,7 @@ Lilly.plugin.define 'Slots' do
     face2 = faces.sample
     face3 = faces.sample
 
-    responses = []
+    responses = ["You rolled: #{face1} #{face2} #{face3}"]
     if face1 == face2 && face2 == face3
         if face1 == 'Kappa'
             responses << "Oh dear. Bad luck, #{user}!"
@@ -46,7 +46,6 @@ Lilly.plugin.define 'Slots' do
             responses << "Better luck next time!"
         end
     end
-    responses << "You rolled: #{face1} #{face2} #{face3}"
   end
 
 end
