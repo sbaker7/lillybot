@@ -67,8 +67,6 @@ $configs = JSON.parse(File.read("res/login.json"))
 client = Twitch::Chat::Client.new(channel: $configs["channel"], nickname: $configs["nickname"], password: $configs["password"]) do
   commands = JSON.parse(File.read('configs/commands.json'))
   new_commands = JSON.parse(File.read('configs/new_commands.json'))
-  @guessing_value = nil
-  @blackjack_game = nil
 
   def self.global_send_message(message)
     send_message message
@@ -92,10 +90,6 @@ client = Twitch::Chat::Client.new(channel: $configs["channel"], nickname: $confi
 
     responses.flatten!.reverse.each { |r| send_message r } if responses.any?
 
-  end
-
-  on(:scheduled_task) do |messages|
-    messages.flatten!.reverse.each { |m| send_message m} if messages.any?
   end
 end
 
