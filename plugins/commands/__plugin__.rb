@@ -20,11 +20,16 @@ Lilly.plugin.define 'Commands' do
   end
 
   on(:raw_message) do |user, message|
-    puts "I'm doing the thing: #{message}"
+    puts @commands
+
+    if (!@commands)
+      @commands = JSON.parse(File.read('res/commands.json'))
+    end
+
     valid_key = @commands.keys.select { |key| message.to_s.match(Regexp.new(key, true)) }.first
     if valid_key
       puts "Found it!"
-      responses = send_message eval("\"#{@commands[valid_key]}\"")
+      responses = @commands[valid_key]
     else
       if message =~ /\A!.*/
         new_commands[message] = "That feature has not yet been implemented."
