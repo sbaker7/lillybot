@@ -77,8 +77,10 @@ client = Twitch::Chat::Client.new(channel: $configs["channel"], nickname: $confi
       # split the command so it can go out as an event
       parts = /\A!?+(?<command>\w+) ?+(?<args>.*)/.match(message)
       if (Lilly.plugin.accepts(parts[:command]))
+        puts "found it!"
         responses << Lilly.plugin.notify(parts[:command], user, parts[:args])
       else
+        puts "didn't find it"
         responses << Lilly.plugin.notify(:raw_message, user, message)
       end
     else
