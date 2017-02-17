@@ -45,16 +45,12 @@
   "\\Ahappy birthday\\s\\w*" : "#{message}!",
   "right.*lilly": "I have no idea what you're talking about, #{user}",
   "lilly.*se(n|m)pai": "You can just call me Lilly, #{user}",
-
-  "\\A!\\S*(anal|cock|penis|pen15|vagina|pussy)\\Z": "be_timed_out(user, \"You're disgusting...\", 1)",
-  "\\A!.*poke" : "be_timed_out(user, \"Don't do that!\", 1)",
-  "\\A!.*(punch|attack)" : "be_timed_out(user, \"We don't accept violence here\", 1)"
+  "\\A!\\S*(anal|cock|penis|pen15|vagina|pussy)\\Z": ["You're disgusting...", ".timeout #{user} 1"],
+  "\\A!.*poke" : ["Don't do that!", ".timeout #{user} 1"],
+  "\\A!.*(punch|attack)" : ["We don't accept violence here.", ".timeout #{user} 1"],
+  
   "\\A!\\S*touch\\Z": "be_touched(user, \"Don't touch me there!\", true)",
   "\\A!.*kiss" : "be_touched(user, \"I don't think Astrious would appreciate that, #{user}\")",
-  "\\A!guessinggame" : "guessing_game",
-  "\\A!guess\\s\\d+" : "make_guess(user, message.scan(/\\d+/).first)",
-  "\\A!chance" : "play_chance(user)",
-  "\\A!spambot\\Z" : "Should I turn off or on? I'm not sure, #{user}",
 
   "\\Ah(i|ello|ey).*lilly": "say_hello(user, message)",
   "\\A!time": "The current time in Melbourne, Australia is #{Time.now.getlocal(\"+11:00\").strftime('%I:%M %p')}",

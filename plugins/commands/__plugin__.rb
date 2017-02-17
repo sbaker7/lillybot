@@ -20,7 +20,6 @@ Lilly.plugin.define 'Commands' do
   end
 
   on(:raw_message) do |user, message|
-    puts @commands
 
     if (!@commands)
       @commands = JSON.parse(File.read(File.expand_path('../res/commands.json', __FILE__)))
@@ -28,7 +27,6 @@ Lilly.plugin.define 'Commands' do
 
     valid_key = @commands.keys.select { |key| message.to_s.match(Regexp.new(key, true)) }.first
     if valid_key
-      puts "Found it!"
       responses = @commands[valid_key]
     else
       if message =~ /\A!.*/
@@ -36,7 +34,7 @@ Lilly.plugin.define 'Commands' do
         File.open("res/new_commands.json", "w") do |f|
           f.write(JSON.pretty_generate(new_commands))
         end
-        responses = new_commands[message]
+        responses = eval("\"#{@commands[valid_key]}\"")
       elsif message =~ /lilly/i
         responses = notify(:clever_lilly, user, message)
       end
