@@ -76,7 +76,11 @@ client = Twitch::Chat::Client.new(channel: $configs["channel"], nickname: $confi
     if message.start_with? '!'
       # split the command so it can go out as an event
       parts = /\A!?+(?<command>\w+) ?+(?<args>.*)/.match(message)
-      responses << Lilly.plugin.notify(parts[:command], user, parts[:args])
+      if (Lilly.plugin.accepts(parts[:command]))
+        responses << Lilly.plugin.notify(parts[:command], user, parts[:args])
+      else
+        responses << Lilly.plugin.notify(:raw_message, user, message)
+      end
     else
       responses << Lilly.plugin.notify(:raw_message, user, message)
     end
