@@ -24,7 +24,7 @@ module Plugin
     end
 
     def accepts(name)
-      @plugins.any? { |p| p.accepts(name) }.empty
+      @plugins.any? { |p| p.accepts?(name) }
     end
 
     def load_plugins(plugin_dir)
