@@ -23,7 +23,7 @@ Lilly.plugin.define 'Commands' do
     puts @commands
 
     if (!@commands)
-      @commands = JSON.parse(File.read(File.expand_path('../res/commands.json')))
+      @commands = JSON.parse(File.read(File.expand_path('../res/commands.json', __FILE__)))
     end
 
     valid_key = @commands.keys.select { |key| message.to_s.match(Regexp.new(key, true)) }.first
