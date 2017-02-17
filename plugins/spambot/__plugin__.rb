@@ -3,7 +3,7 @@ require 'rufus-scheduler'
 Lilly.plugin.define 'Spambot' do
 
   on(:system_start) do
-    # do nothing?
+    puts "SPAMBOT DEBUG: initialising spambot"
     @scheduler = Rufus::Scheduler.new
     @job = nil
   end

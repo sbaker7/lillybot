@@ -1,7 +1,8 @@
-# Chance
+# Spambot
 
 The following commands are accepted:
 
 | Command | Function |
 | ------- | -------- |
-|!chance | Play chance with Lilly! |
+|!spambot on | Turns on spam bot |
+|!spambot off | Turns off spam bot |
