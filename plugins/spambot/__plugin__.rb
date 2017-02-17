@@ -16,9 +16,9 @@ Lilly.plugin.define 'Spambot' do
     puts "SPAMBOT DEBUG: turning on"
     message = "Go Astrious, go! Make sure to follow Astrious on twitter, @Astriousruns. You can play games and talk to me too! Try !commands"
 
-    # @job = @scheduler.every '30s', first_in: '0s' do
-    #   send_message message
-    # end
+    @job = @scheduler.every '30s', first_in: '0s' do
+      puts message
+    end
 
     "This plugin doesn't work yet. It will be ready soon"
   end
