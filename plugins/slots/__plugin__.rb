@@ -40,18 +40,19 @@ Lilly.plugin.define 'Slots' do
         end
     end
 
+    responses
   end
 
   on(:dogslots) do |user, message|
-    responses << roll_slots(user, "catslots")
+    responses = roll_slots(user, "dogslots")
   end
 
   on(:catslots) do |user, message|
-    responses << roll_slots(user, "catslots")
+    responses = roll_slots(user, "catslots")
   end
 
   on(:slots) do |user, message|
-    responses << roll_slots(user, "slots")
+    responses = roll_slots(user, "slots")
   end
 
 end
