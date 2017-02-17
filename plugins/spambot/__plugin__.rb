@@ -31,6 +31,7 @@ Lilly.plugin.define 'Spambot' do
 
     on(:spambot) do |user, message|
       puts "SPAMBOT DEBUG: #{user} asked #{message}"
+        responses = []
       if message =~ /on/i
         if user == "astrious" || user == "dragnflier"
           responses << turn_on()
