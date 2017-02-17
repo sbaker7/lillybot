@@ -1,9 +1,7 @@
 Lilly.plugin.define 'Chance' do
 
   on(:system_start) do
-    path = File.expand_path('../res/faces.json', __FILE__)
-    file = File.read(path)
-    @faces = JSON.parse(file)
+    # do nothing?
   end
 
   on(:system_stop) do
