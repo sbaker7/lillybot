@@ -2,14 +2,7 @@ require_relative 'lib/twitch/chat'
 require_relative 'lib/plugin/plugin'
 require_relative 'lib/lilly/lilly'
 require 'json'
-require 'cleverbot'
 
-def clever_lilly(message)
-  if $bot == nil
-    $bot = Cleverbot.new($configs["clever_user"], $configs["clever_api_key"])
-  end
-  send_message $bot.say(message.downcase.sub!('lilly', ''))
-end
 
 def say_hello(user, message)
   if user != "astrious" && user != "dragnflier" && user != "catbag"
@@ -85,7 +78,7 @@ client = Twitch::Chat::Client.new(channel: $configs["channel"], nickname: $confi
       parts = /\A!?+(?<command>\w+) ?+(?<args>.*)/.match(message)
       responses << Lilly.plugin.notify(parts[:command], user, parts[:args])
     else
-      responses << clever_lilly(message) if message =~ /lilly/i
+      responses << Lilly.plugin.notify(:raw_message, user, message)
     end
 
     responses.flatten!.reverse.each { |r| send_message r } if responses.any?
