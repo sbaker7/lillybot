@@ -13,12 +13,14 @@ Lilly.plugin.define 'Spambot' do
   end
 
   def turn_on()
-    @job = @scheduler.every '10m', first_in: '0s' do "Go Astrious, go! Make sure to follow Astrious on twitter, @Astriousruns. You can play games and talk to me too! Try !commands"
+    message = "Go Astrious, go! Make sure to follow Astrious on twitter, @Astriousruns. You can play games and talk to me too! Try !commands"
+
+    @job = @scheduler.every '10m', first_in: '0s' do notify(:scheduled_task, message)
   end
 
   def turn_off()
     @scheduler.unschedule(@job)
-    "I can stop now? Being a sell out is tiring work..."
+    message = "I can stop now? Being a sell out is tiring work..."
   end
 
   on(:spambot) do |user, message|
@@ -35,8 +37,10 @@ Lilly.plugin.define 'Spambot' do
         responses << "You don't have permission to do that, #{user}"
       end
     else
-      "I don't know what '#{message}' means, #{user}"
+      responses << "I don't know what '#{message}' means, #{user}"
     end
+
+    responses
   end
 
 end

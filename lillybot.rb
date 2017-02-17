@@ -89,6 +89,10 @@ client = Twitch::Chat::Client.new(channel: $configs["channel"], nickname: $confi
     responses.flatten!.reverse.each { |r| send_message r } if responses.any?
 
   end
+
+  on(:scheduled_task) do |messages|
+    messages.flatten!.reverse.each { |m| send_message m} if messages.any?
+  end
 end
 
 client.run!
