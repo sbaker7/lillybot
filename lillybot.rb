@@ -63,16 +63,7 @@ def spam_bot(user, spam = true)
     end
 end
 
-def play_chance(user)
-    result = rand(5) + 1
-    if result == 3
-        send_message "Bad luck, #{user}! You've been timed out for 20 seconds"
-        send_message ".timeout #{user} 20"
-    else
-        send_message "What good luck you have, #{user}!"
-    end
-    send_message "You rolled: #{result}"
-end
+
 
 def guessing_game
     if @guessing_value == nil

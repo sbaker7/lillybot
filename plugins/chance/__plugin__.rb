@@ -1,4 +1,4 @@
-Lilly.plugin.define 'Slots' do
+Lilly.plugin.define 'Chance' do
 
   on(:system_start) do
     path = File.expand_path('../res/faces.json', __FILE__)
