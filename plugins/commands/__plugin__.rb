@@ -6,7 +6,7 @@ Lilly.plugin.define 'Commands' do
   on(:system_start) do
     path = File.expand_path('../res/commands.json', __FILE__)
     file = File.read(path)
-    $configs = File.read("../../res/login.json"))
+    $configs = JSON.parse(File.read("../../res/login.json"))
     @commands = JSON.parse(file)
     @bot = Cleverbot.new($configs["clever_user"], $configs["clever_api_key"])
   end
