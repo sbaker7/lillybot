@@ -20,6 +20,7 @@ Lilly.plugin.define 'Commands' do
   end
 
   on(:raw_message) do |user, message|
+    puts "I'm doing the thing: #{message}"
     valid_key = @commands.keys.select { |key| message.to_s.match(Regexp.new(key, true)) }.first
     if valid_key
       puts "Found it!"
@@ -32,8 +33,9 @@ Lilly.plugin.define 'Commands' do
         end
         responses = new_commands[message]
       elsif message =~ /lilly/i
-        notify(:clever_lilly, user, message)
+        responses = notify(:clever_lilly, user, message)
       end
     end
+    responses
   end
 end
