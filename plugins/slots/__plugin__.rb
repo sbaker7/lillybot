@@ -10,15 +10,8 @@ Lilly.plugin.define 'Slots' do
     # do nothing?
   end
 
-  on(:slots) do |user, message|
-    faces = nil
-    if message.eql? 'cat'
-      faces = @faces["catslots"]
-    elsif message.eql? 'dog'
-      faces = @faces["dogslots"]
-    else
-      faces = @faces["slots"]
-    end
+  def roll_slots(user, slots)
+    faces = @faces[slots]
 
     face1 = faces.sample
     face2 = faces.sample
@@ -46,6 +39,19 @@ Lilly.plugin.define 'Slots' do
             responses << "Better luck next time!"
         end
     end
+
+  end
+
+  on(:dogslots) do |user, message|
+    responses << roll_slots(user, "catslots")
+  end
+
+  on(:catslots) do |user, message|
+    responses << roll_slots(user, "catslots")
+  end
+
+  on(:slots) do |user, message|
+    responses << roll_slots(user, "slots")
   end
 
 end
