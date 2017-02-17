@@ -119,10 +119,11 @@ client = Twitch::Chat::Client.new(channel: $configs["channel"], nickname: $confi
             parts = /\A!?+(?<command>\w+) ?+(?<args>.*)/.match(message)
             responses << Lilly.plugin.notify(parts[:command], user, parts[:args])
         else
-            responses << Lilly.plugin.notify(:message, user, message)
+            responses << clever_lilly(message) if message =~ /lilly/i
         end
 
-        responses.flatten!.reverse.each { |r| send_message r }
+        responses.flatten!.reverse.each { |r| send_message r } if responses.any?
+
     end
 end
 
