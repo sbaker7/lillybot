@@ -17,8 +17,10 @@ Lilly.plugin.define 'Spambot' do
     message = "Go Astrious, go! Make sure to follow Astrious on twitter, @Astriousruns. You can play games and talk to me too! Try !commands"
 
     @job = @scheduler.every '10m', first_in: '0s' do
-      notify(:scheduled_task, message)
+      global_send_message message
     end
+
+
   end
 
     def turn_off()

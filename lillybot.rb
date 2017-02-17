@@ -70,6 +70,10 @@ client = Twitch::Chat::Client.new(channel: $configs["channel"], nickname: $confi
   @guessing_value = nil
   @blackjack_game = nil
 
+  def self.global_send_message(message)
+    send_message message
+  end
+
   on(:connect) do
     send_message 'Hi guys!'
   end
