@@ -3,7 +3,6 @@ require 'rufus-scheduler'
 Lilly.plugin.define 'Spambot' do
 
   on(:system_start) do
-    puts "SPAMBOT DEBUG: initialising spambot"
     @scheduler = Rufus::Scheduler.new
     @job = nil
   end
@@ -13,7 +12,6 @@ Lilly.plugin.define 'Spambot' do
   end
 
   def turn_on()
-    puts "SPAMBOT DEBUG: turning on"
     message = "Go Astrious, go! Make sure to follow Astrious on twitter, @Astriousruns. You can play games and talk to me too! Try !commands"
 
     @job = @scheduler.every '30s', first_in: '0s' do
@@ -24,13 +22,11 @@ Lilly.plugin.define 'Spambot' do
   end
 
     def turn_off()
-      puts "SPAMBOT DEBUG: turning off"
       @scheduler.unschedule(@job)
       message = "I can stop now? Being a sell out is tiring work..."
     end
 
     on(:spambot) do |user, message|
-      puts "SPAMBOT DEBUG: #{user} asked #{message}"
         responses = []
       if message =~ /on/i
         if user == "astrious" || user == "dragnflier"
@@ -47,7 +43,6 @@ Lilly.plugin.define 'Spambot' do
       else
         responses << "I don't know what '#{message}' means, #{user}"
       end
-
       responses
     end
 

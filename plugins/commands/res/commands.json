@@ -36,6 +36,7 @@
   "\\A!snass": "You've been spending too much time with Dragnflier, haven't you?",
   "\\A!sellout": "Welcome to Astrious' stream! Having fun? Be sure to follow him, he's quite the gentleman. He also has a twitter which tweets when he streams! The twitter is @Astriousruns. Thanks for watching!",
   "\\A!nohints": "No hints includes any suggestions, spoilers, or any discussion that provides information about the game. Please don't ask about where Astrious is up to; this gives away more than you think! Hinters will be warned, then timed out and banned if behaviour continues. Thank you for your cooperation <3",
+  "\\A!commands": "I can respond to my name and any of these commands, plus many more: !commands, !slots, !chance, !hi, !mycreator",
 
   "\\A!timeout": ".timeout #{user} 1",
   "\\A!hot": "Do you need some water, #{user}?",
@@ -48,14 +49,11 @@
   "\\A!\\S*(anal|cock|penis|pen15|vagina|pussy)\\Z": ["You're disgusting...", ".timeout #{user} 1"],
   "\\A!.*poke" : ["Don't do that!", ".timeout #{user} 1"],
   "\\A!.*(punch|attack)" : ["We don't accept violence here.", ".timeout #{user} 1"],
-  
+  "\\A!time": "The current time in Melbourne, Australia is #{Time.now.getlocal(\"+11:00\").strftime('%I:%M %p')}",
+  "\\A!quote": "#{@responses['quotes'].sample}",
+  "\\A!meme" : "#{@responses['meme'].sample}",
+
   "\\A!\\S*touch\\Z": "be_touched(user, \"Don't touch me there!\", true)",
   "\\A!.*kiss" : "be_touched(user, \"I don't think Astrious would appreciate that, #{user}\")",
-
-  "\\Ah(i|ello|ey).*lilly": "say_hello(user, message)",
-  "\\A!time": "The current time in Melbourne, Australia is #{Time.now.getlocal(\"+11:00\").strftime('%I:%M %p')}",
-  "\\A!quote": "JSON.parse(File.read('configs/responses.json'))['quotes'].sample",
-  "\\A!commands": "I can respond to my name and any of these commands, plus many more: #{JSON.parse(File.read('configs/commands.json')).keys.sample(5).join(\", \")}",
-  "\\A!meme" : "JSON.parse(File.read('configs/responses.json'))['meme'].sample"
-
+  "\\Ah(i|ello|ey).*lilly": "say_hello(user, message)"
 }
