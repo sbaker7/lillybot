@@ -23,6 +23,10 @@ module Plugin
       @plugins << p
     end
 
+    def accepts(name)
+      @plugins.any? { |p| p.accepts?(name) }.empty
+    end
+
     def load_plugins(plugin_dir)
       @loader.call(plugin_dir)
       notify(:system_start)
