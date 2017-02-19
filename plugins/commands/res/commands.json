@@ -54,6 +54,6 @@
   "\\A!meme" : "#{@responses['meme'].sample}",
 
   "\\A!\\S*touch\\Z": "be_touched(user, \"Don't touch me there!\", true)",
-  "\\A!.*kiss" : "be_touched(user, \"I don't think Astrious would appreciate that, #{user}\")",
+  "\\A!.*kiss" : "be_touched(user, \"I don't think Aastrious would appreciate that, #{user}\")",
   "\\Ah(i|ello|ey).*lilly": "say_hello(user, message)"
 }

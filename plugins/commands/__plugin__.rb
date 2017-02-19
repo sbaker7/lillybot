@@ -17,7 +17,7 @@ Lilly.plugin.define 'Commands' do
 
   def say_hello(user, message)
     if user != "astrious" && user != "dragnflier" && user != "catbag"
-       eval("\"#{@responses["greetings"].sample}\"")
+      eval("\"#{@responses["greetings"].sample}\"")
     else
       if user == "astrious"
         "Hi Astrious, I missed you! Ready to stream again today? <3"
@@ -56,7 +56,7 @@ Lilly.plugin.define 'Commands' do
         response = eval(@commands[valid_key])
       rescue SyntaxError => ex
         puts ex
-        response = @commands[valid_key]
+        response = eval("\"#{@commands[valid_key]}\"")
       rescue NoMethodError => ex
         puts ex
         response = eval("\"#{@commands[valid_key]}\"")
