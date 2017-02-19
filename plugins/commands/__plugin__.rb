@@ -53,6 +53,7 @@ Lilly.plugin.define 'Commands' do
   on(:raw_message) do |user, message|
     if valid_key = @commands.keys.select { |key| message.to_s.match(Regexp.new(key, true)) }.first
       begin
+        puts @commands[valid_key]
         if @commands[valid_key].kind_of?(Array)
           @commands[valid_key].each { |c| eval("\"#{c}\"")}
         else
