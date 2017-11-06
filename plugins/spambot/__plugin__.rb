@@ -15,12 +15,12 @@ Lilly.plugin.define 'Spambot' do
   def turn_on(client)
     message = "Go Astrious, go! Make sure to follow Astrious on twitter, @Astriousruns. You can play games and talk to me too! Try !commands"
 
-    @job = @scheduler.every '30s', first_in: '0s' do
+    @job = @scheduler.every '10m', first_in: '0s' do
       client.send_twitch_message message
       puts message
     end
 
-    message
+    #message
   end
 
     def turn_off()
