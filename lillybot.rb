@@ -9,6 +9,10 @@ $configs = JSON.parse(File.read("res/login.json"))
 
 client = Twitch::Chat::Client.new(channel: $configs["channel"], nickname: $configs["nickname"], password: $configs["password"]) do
 
+    def send_twitch_message(message)
+      send_message message
+    end
+
   on(:connect) do
     send_message 'Hi guys!'
   end
@@ -21,7 +25,7 @@ client = Twitch::Chat::Client.new(channel: $configs["channel"], nickname: $confi
       # split the command so it can go out as an event
       parts = /\A!?+(?<command>\w+) ?+(?<args>.*)/.match(message)
       if (Lilly.plugin.accepts(parts[:command]))
-        responses << Lilly.plugin.notify(parts[:command], user, parts[:args])
+        responses << Lilly.plugin.notify(parts[:command], user, parts[:args], self)
       else
         responses << Lilly.plugin.notify('raw_message', user, message)
       end

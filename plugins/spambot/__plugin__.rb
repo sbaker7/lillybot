@@ -1,4 +1,5 @@
 require 'rufus-scheduler'
+require_relative '../../lib/twitch/chat'
 
 Lilly.plugin.define 'Spambot' do
 
@@ -11,14 +12,15 @@ Lilly.plugin.define 'Spambot' do
     # do nothing?
   end
 
-  def turn_on()
+  def turn_on(client)
     message = "Go Astrious, go! Make sure to follow Astrious on twitter, @Astriousruns. You can play games and talk to me too! Try !commands"
 
     @job = @scheduler.every '30s', first_in: '0s' do
+      client.send_twitch_message message
       puts message
     end
 
-    "This plugin doesn't work yet. It will be ready soon"
+    message
   end
 
     def turn_off()
@@ -26,11 +28,11 @@ Lilly.plugin.define 'Spambot' do
       message = "I can stop now? Being a sell out is tiring work..."
     end
 
-    on(:spambot) do |user, message|
+    on(:spambot) do |user, message, client|
         responses = []
       if message =~ /on/i
         if user == "astrious" || user == "dragnflier"
-          responses << turn_on()
+          responses << turn_on(client)
         else
           responses << "You don't have permission to do that, #{user}"
         end
