@@ -1,6 +1,7 @@
 # resources and configs
 res/
 logs/
+startup-scripts/
 
 ### Windows ###
 # Windows image file caches
