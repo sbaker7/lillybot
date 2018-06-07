@@ -11,6 +11,6 @@ module Lilly
   end
 
   def self.log
-    @@logger ||= Logger.new STDOUT
+    @@logger ||= Logger.new 'logs/lillybot.log' , 'daily'
   end
 end

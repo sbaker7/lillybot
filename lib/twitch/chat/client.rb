@@ -13,10 +13,10 @@ module Twitch
         options = {
           host: 'irc.twitch.tv',
           port: '6667',
-          output: STDOUT
+          output: 'log/twitch.log'
         }.merge!(options)
 
-        @logger = Logger.new(options[:output]) if options[:output]
+        @logger = Logger.new(options[:output], 'daily') if options[:output]
 
         @host = options[:host]
         @port = options[:port]
