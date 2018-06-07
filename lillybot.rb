@@ -9,13 +9,10 @@ if (!$configs["logdir"])
   $configs["logdir"] = Dir.getwd+'/logs/'
 end
 
-
-
 Lilly.setLogDirectory($configs["logdir"])
-
 Lilly.plugin.load_plugins __dir__
 
-client = Twitch::Chat::Client.new(channel: $configs["channel"], nickname: $configs["nickname"], password: $configs["password"], logdir: $configs["logdir"]) do
+client = Twitch::Chat::Client.new(channel: $configs["channel"], nickname: $configs["nickname"], password: $configs["password"]) do
 
     def send_twitch_message(message)
       send_message message
