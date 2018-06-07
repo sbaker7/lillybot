@@ -55,16 +55,17 @@ Lilly.plugin.define 'Commands' do
       begin
         Lilly.log.debug @commands[valid_key]
         if @commands[valid_key].kind_of?(Array)
+          Lilly.log.
           @commands[valid_key].each { |c| eval("\"#{c}\"")}
         else
-          response = eval(@commands[valid_key])
+          response = eval(@commands[valid_key]})
         end
-      rescue SyntaxError => ex
+      rescue SyntaxError, NameError, NoMethodError => ex
         Lilly.log.debug ex
         response = eval("\"#{@commands[valid_key]}\"")
-      rescue NoMethodError => ex
+      rescue => ex
         Lilly.log.debug ex
-        response = eval("\"#{@commands[valid_key]}\"")
+        response = "Help, I don't know what I'm doing"
       end
     else
       if message =~ /\A!.*/
