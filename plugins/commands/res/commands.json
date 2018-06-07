@@ -56,5 +56,5 @@
   "\\A!\\S*touch\\Z": "be_touched(user, \"Don't touch me there!\", true)",
   "\\A!.*kiss" : "be_touched(user, \"I don't think Aastrious would appreciate that, #{user}\")",
   "\\Ah(i|ello|ey).*lilly": "say_hello(user, message)",
-  "\\A!(oo)*rando": "OoT Randomiser randomises all items, songs and medallions/stones. It shuffles these items amongst themselves in such a way that the game can still be beaten without glitches. The additional settings applied include opening Forest (not needing to beat Deku Tree), opening Door of Time (not needing Song of Time), hints from Stones and Bridge to Ganon's Castle being All medallions!"
+  "\\A!(oot)*rando": "OoT Randomiser randomises all items, songs and medallions/stones. It shuffles these items amongst themselves in such a way that the game can still be beaten without glitches. The additional settings applied include opening Forest (not needing to beat Deku Tree), opening Door of Time (not needing Song of Time), hints from Stones and Bridge to Ganon's Castle being All medallions!"
 }
