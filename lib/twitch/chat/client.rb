@@ -5,7 +5,7 @@ module Twitch
       USER_MESSAGES_COUNT = 20
       TWITCH_PERIOD = 30.0
 
-      attr_accessor :host, :port, :nickname, :password, :connection
+      attr_accessor :host, :port, :nickname, :password, :connection, :logdir
       attr_reader :channel, :callbacks
 
       def initialize(options = {}, &blk)
@@ -13,10 +13,10 @@ module Twitch
         options = {
           host: 'irc.twitch.tv',
           port: '6667',
-          output: 'log/twitch.log'
+          output: @logdir ? `#{@logdir}twitch.log` : STDOUT
         }.merge!(options)
 
-        @logger = Logger.new(options[:output], 'daily') if options[:output]
+        @logger = Logger.new(options[:output]) if options[:output]
 
         @host = options[:host]
         @port = options[:port]
