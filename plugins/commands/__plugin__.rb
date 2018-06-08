@@ -60,13 +60,13 @@ Lilly.plugin.define 'Commands' do
           response = eval(@commands[valid_key])
         end
       rescue SyntaxError => ex
-        Lilly.log.debug ex
+        Lilly.log.debug ex.message
         response = eval("\"#{@commands[valid_key]}\"")
       rescue NoMethodError => ex
-        Lilly.log.debug ex
+        Lilly.log.debug ex.message
         response = eval("\"#{@commands[valid_key]}\"")
       rescue NameError => ex
-        Lilly.log.debug ex
+        Lilly.log.debug ex.message
         response = eval("\"#{@commands[valid_key]}\"")
       rescue => ex
         Lilly.log.debug ex

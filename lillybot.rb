@@ -3,10 +3,10 @@ require_relative 'lib/plugin/plugin'
 require_relative 'lib/lilly/lilly'
 require 'json'
 
-$configs = JSON.parse(File.read("res/login.json"))
+$configs = JSON.parse(File.read(__dir__+"/res/login.json"))
 
 if (!$configs["logdir"])
-  $configs["logdir"] = Dir.getwd+'/logs/'
+  $configs["logdir"] = __dir__+'/logs/'
 end
 
 Lilly.setLogDirectory($configs["logdir"])
@@ -18,8 +18,8 @@ client = Twitch::Chat::Client.new(channel: $configs["channel"], nickname: $confi
       send_message message
     end
 
-  on(:connect) do
-    send_message 'Hi guys!'
+  on(:connected) do
+    send_message 'Hello everyone! <3'
   end
 
   on(:message) do |user, message|
