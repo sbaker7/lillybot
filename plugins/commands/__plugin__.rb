@@ -38,6 +38,10 @@ Lilly.plugin.define 'Commands' do
     end
   end
 
+  def say_quote(user) {
+    eval("\"#{@responses["quotes"].sample}\"")
+  }
+
   on(:clever_lilly) do |user, message|
     @bot.say(message.downcase.sub!('lilly', ''))
   end

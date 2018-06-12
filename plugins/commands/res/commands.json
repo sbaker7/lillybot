@@ -1,7 +1,7 @@
 {
   "LillyBag": "CatBag + MaiWaifu = LillyBag",
   "CatBag": "CatBag <3",
-  "how are you.*lilly": "I''m feeling good, #{user}. Thanks for asking",
+  "how are you.*lilly": "I'm feeling good, #{user}. Thanks for asking",
   "FrankerZ": "FrankerZ LilZ LilyZ <3",
   "LilyZ": "Isn't she cute? LilyZ <3",
   "Lily": "Do you mean LilyZ?",
@@ -50,7 +50,7 @@
   "\\A!.*poke" : ["Don't do that!", ".timeout #{user} 1"],
   "\\A!.*(punch|attack)" : ["We don't accept violence here.", ".timeout #{user} 1"],
   "\\A!time": "The current time in Melbourne, Australia is #{Time.now.getlocal(\"+11:00\").strftime('%I:%M %p')}",
-  "\\A!quote": "\"#{@responses['quotes'].sample}\"",
+  "\\A!quote": "say_quote(user)",
   "\\A!meme" : "\"#{@responses['meme'].sample}\"",
 
   "\\A!\\S*touch\\Z": "be_touched(user, \"Don't touch me there!\", true)",
