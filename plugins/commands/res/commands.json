@@ -7,6 +7,10 @@
   "Lily": "Do you mean LilyZ?",
   "MaiWaifu": "MaiWaifu",
 
+  "\\A(!addcomm)\\s(!\\w+)\\s(.*)": "create_command(user, message)",
+  "\\A(!editcomm)\\s(!\\w+)\\s(.*)": "edit_command(user, message)",
+  "\\A(!delcomm)\\s(!\\w+)": "delete_command(user, message)",
+
   "\\A!feels": "I'm Lilly Satou from the Visual Novel Kawata Shoujo. I suggest you give it a try ;)",
   "\\A!banme": ".timeout #{user} 1",
   "\\A!mycreator": "I was written by Astrious' other wife, Dragnflier",

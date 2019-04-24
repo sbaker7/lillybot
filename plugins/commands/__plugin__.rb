@@ -46,12 +46,44 @@ Lilly.plugin.define 'Commands' do
     @bot.say(message.downcase.sub!('lilly', ''))
   end
 
-  on(:create_command) do |user, message|
+  on(:unknown_command) do |user, message|
     @new_commands[message] = "That feature has not yet been implemented."
     File.open(File.expand_path('../res/new_commands.json', __FILE__), "w") do |f|
       f.write(JSON.pretty_generate(@new_commands))
     end
     @new_commands[message]
+  end
+
+  on(:create_command) do |user, message|
+    if user == "astrious" || user == "dragnflier"
+      if valid_key = @commands.keys.select { |key| message.to_s.match(Regexp.new(key, true)) }.first
+        "Sorry, #{user} but that command already exists. Did you mean !editcomm?"
+      else
+        "So you would like me to add #{message}?"
+      end
+    else
+      "Sorry, #{user}. I can't let you do that."
+    end
+  end
+
+  on(:edit_command) do |user, message|
+    if user == "astrious" || user == "dragnflier"
+      if valid_key = @commands.keys.select { |key| message.to_s.match(Regexp.new(key, true)) }.first
+        "So you would like me to edit #{message}?"
+      else
+        "Sorry, #{user} but that command doesn't exist. Did you mean !addcomm?"
+      end
+    else
+      "Sorry, #{user}. I can't let you do that."
+    end
+  end
+
+  on(:delete_command) do |user, message|
+    if user == "astrious" || user == "dragnflier"
+      "I can't delete things quite yet. But just to check, you wanted me to delete #{message}?"
+    else
+      "Sorry, #{user}. I can't let you do that."
+    end
   end
 
   on(:raw_message) do |user, message|
@@ -78,7 +110,7 @@ Lilly.plugin.define 'Commands' do
       end
     else
       if message =~ /\A!.*/
-        response = notify(:create_command, user, message)
+        response = notify(:unknown_command, user, message)
       end
     end
   end
