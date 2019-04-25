@@ -44,10 +44,15 @@ Lilly.plugin.define 'Commands' do
 
   def create_command(user, message)
     if user == "astrious" || user == "dragnflier"
+      command = message.to_s.match(Regexp.new(/\A(!addcomm)\s(!\w+)\s(.+)/i))
+      if (command.first === "!addcomm") {
+        # lose the first item since we already know and are doing that.
+        command = command.drop(1)
+      }
       if valid_key = @commands.keys.select { |key| message.to_s.match(Regexp.new(key, true)) }.first
         "Sorry, #{user} but that command already exists. Did you mean !editcomm?"
       else
-        "So you would like me to add #{message}?"
+        "So you would like me to add #{command.first}? I'll reply with #{command.last}"
       end
     else
       "Sorry, #{user}. I can't let you do that."
@@ -56,8 +61,14 @@ Lilly.plugin.define 'Commands' do
 
   def edit_command(user, message)
     if user == "astrious" || user == "dragnflier"
-      if valid_key = @commands.keys.select { |key| message.to_s.match(Regexp.new(key, true)) }.first
-        "So you would like me to edit #{message}?"
+      command = message.to_s.match(Regexp.new(/\A(!editcomm)\s(!\w+)\s(.+)/i))
+      if (command.first === "!editcomm") {
+        # lose the first item since we already know and are doing that.
+        command = command.drop(1)
+      }
+
+      if valid_key = @commands.keys.select { |key| command.to_s.match(Regexp.new(key, true)) }.first
+        "So you would like me to edit #{command.first}? I will reply with #{command.last}"
       else
         "Sorry, #{user} but that command doesn't exist. Did you mean !addcomm?"
       end
@@ -68,7 +79,8 @@ Lilly.plugin.define 'Commands' do
 
   def delete_command(user, message)
     if user == "astrious" || user == "dragnflier"
-      "I can't delete things quite yet. But just to check, you wanted me to delete #{message}?"
+      command = message.to_s.match(Regexp.new(/\A(!delcomm)\s(!\w+)/i))
+      "I can't delete things quite yet. But just to check, you wanted me to delete #{message.last}?"
     else
       "Sorry, #{user}. I can't let you do that."
     end
