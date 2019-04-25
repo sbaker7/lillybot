@@ -45,10 +45,10 @@ Lilly.plugin.define 'Commands' do
   def create_command(user, message)
     if user == "astrious" || user == "dragnflier"
       command = message.to_s.match(Regexp.new(/\A(!addcomm)\s(!\w+)\s(.+)/i))
-      if (command.first === "!addcomm") {
+      if (command.first === "!addcomm")
         # lose the first item since we already know and are doing that.
         command = command.drop(1)
-      }
+      end
       if valid_key = @commands.keys.select { |key| message.to_s.match(Regexp.new(key, true)) }.first
         "Sorry, #{user} but that command already exists. Did you mean !editcomm?"
       else
@@ -62,10 +62,10 @@ Lilly.plugin.define 'Commands' do
   def edit_command(user, message)
     if user == "astrious" || user == "dragnflier"
       command = message.to_s.match(Regexp.new(/\A(!editcomm)\s(!\w+)\s(.+)/i))
-      if (command.first === "!editcomm") {
+      if (command.first === "!editcomm")
         # lose the first item since we already know and are doing that.
         command = command.drop(1)
-      }
+      end
 
       if valid_key = @commands.keys.select { |key| command.to_s.match(Regexp.new(key, true)) }.first
         "So you would like me to edit #{command.first}? I will reply with #{command.last}"
