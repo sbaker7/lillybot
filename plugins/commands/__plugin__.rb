@@ -42,17 +42,21 @@ Lilly.plugin.define 'Commands' do
     eval("\"#{@responses["quotes"].sample}\"")
   end
 
+  def save_commands()
+    File.open(File.expand_path('../res/commands.json', __FILE__), "w") do |f|
+      f.write(JSON.pretty_generate(@commands))
+    end
+  end
+
   def create_command(user, message)
     if user == "astrious" || user == "dragnflier"
-      command = message.to_s.match(Regexp.new(/\A(!addcomm)\s(!\w+)\s(.+)/i))
-      if (command.first === "!addcomm")
-        # lose the first item since we already know and are doing that.
-        command = command.drop(1)
-      end
-      if valid_key = @commands.keys.select { |key| message.to_s.match(Regexp.new(key, true)) }.first
+      split_message = message.to_s.match(Regexp.new(/\A(?:!addcomm)\s(?<command>!\w+)\s(?<response>.+)/i))
+      if valid_key = @commands.keys.select { |key| split_message["command"].to_s.match(Regexp.new(key, true)) }.first
         "Sorry, #{user} but that command already exists. Did you mean !editcomm?"
       else
-        "So you would like me to add #{command.first}? I'll reply with #{command.last}"
+        @commands.merge!({"\\A#{split_message["command"].to_s}" => split_message["response"].to_s})
+        save_commands()
+        "Got it. Now when you say #{split_message["command"]}, I will reply with #{split_message["response"]}"
       end
     else
       "Sorry, #{user}. I can't let you do that."
@@ -61,14 +65,11 @@ Lilly.plugin.define 'Commands' do
 
   def edit_command(user, message)
     if user == "astrious" || user == "dragnflier"
-      command = message.to_s.match(Regexp.new(/\A(!editcomm)\s(!\w+)\s(.+)/i))
-      if (command.first === "!editcomm")
-        # lose the first item since we already know and are doing that.
-        command = command.drop(1)
-      end
-
-      if valid_key = @commands.keys.select { |key| command.to_s.match(Regexp.new(key, true)) }.first
-        "So you would like me to edit #{command.first}? I will reply with #{command.last}"
+      split_message = message.to_s.match(Regexp.new(/\A(?:!editcomm)\s(?<command>!\w+)\s(?<response>.+)/i))
+      if valid_key = @commands.keys.select { |key| split_message["command"].to_s.match(Regexp.new(key, true)) }.first
+        @commands[valid_key] = split_message["response"].to_s
+        save_commands()
+        "Got it. Now when you say #{split_message["command"]}, I will reply with #{split_message["response"]}"
       else
         "Sorry, #{user} but that command doesn't exist. Did you mean !addcomm?"
       end
@@ -79,8 +80,14 @@ Lilly.plugin.define 'Commands' do
 
   def delete_command(user, message)
     if user == "astrious" || user == "dragnflier"
-      command = message.to_s.match(Regexp.new(/\A(!delcomm)\s(!\w+)/i))
-      "I can't delete things quite yet. But just to check, you wanted me to delete #{message.last}?"
+      split_message = message.to_s.match(Regexp.new(/\A(!delcomm)\s(?<command>!\w+)/i))
+      if valid_key = @commands.keys.select { |key| split_message["command"].to_s.match(Regexp.new(key, true)) }.first
+        @commands.delete(valid_key)
+        save_commands()
+        "I seem to have forgotten how to respond to #{split_message["command"]} all of a sudden..."
+      else
+        "Sorry, #{user}. I don't think that command exists..."
+      end
     else
       "Sorry, #{user}. I can't let you do that."
     end
@@ -91,7 +98,11 @@ Lilly.plugin.define 'Commands' do
   end
 
   on(:unknown_command) do |user, message|
-    @new_commands[message] = "That feature has not yet been implemented."
+    if @new_commands && @new_commands.is_a?(Hash)
+      @new_commands[message] = "That feature has not yet been implemented."
+    else
+      @new_commands = {message => "That feature has not yet been implemented."}
+    end
     File.open(File.expand_path('../res/new_commands.json', __FILE__), "w") do |f|
       f.write(JSON.pretty_generate(@new_commands))
     end
@@ -101,7 +112,6 @@ Lilly.plugin.define 'Commands' do
   on(:raw_message) do |user, message|
     if valid_key = @commands.keys.select { |key| message.to_s.match(Regexp.new(key, true)) }.first
       begin
-        Lilly.log.debug @commands[valid_key]
         if @commands[valid_key].kind_of?(Array)
           @commands[valid_key].each { |c| eval("\"#{c}\"")}
         else
@@ -117,8 +127,12 @@ Lilly.plugin.define 'Commands' do
         Lilly.log.debug ex.message
         response = eval("\"#{@commands[valid_key]}\"")
       rescue => ex
-        Lilly.log.debug ex
-        response = "Whoops, that was almost a problem. Can you tell @dragnflier what you said so she can have a look into why I couldn't respond to that? Thanks #{user}!"
+        Lilly.log.debug ex.message
+        if user === "dragnflier"
+          response = "#{user}, are you messing with my code again? I have a bit of a headache..."
+        else
+          response = "Whoops, that was almost a problem. Can you tell @dragnflier what you said so she can have a look into why I couldn't respond to that? Thanks #{user}!"
+        end
       end
     else
       if message =~ /\A!.*/

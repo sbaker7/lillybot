@@ -59,6 +59,7 @@ module Plugin
       plugin.notify(event, *args)
     rescue Exception => e
       Lilly.log.error "Error notifying #{plugin.name}: #{e.message}"
+      Lilly.log.debug e.backtrace
     end
 
   end
